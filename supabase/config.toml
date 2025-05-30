@@ -1,1 +1,8 @@
+
 project_id = "yjvbvexccxbpwhftijlc"
+
+[functions.generate-content]
+verify_jwt = false
+
+[functions.generate-blog-post]
+verify_jwt = false

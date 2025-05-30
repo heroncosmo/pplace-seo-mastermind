@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,8 +5,11 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import { useBlogPosts } from '@/hooks/useBlogPosts';
 
 const BlogPage = () => {
+  const { data: blogPosts, isLoading } = useBlogPosts();
+  
   const posts = [
     {
       id: 1,
@@ -102,7 +104,7 @@ const BlogPage = () => {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
-              <div className="text-2xl font-bold text-yellow-400 mb-2">50+</div>
+              <div className="text-2xl font-bold text-yellow-400 mb-2">{blogPosts?.length || 50}+</div>
               <p className="text-purple-100">Artigos Publicados</p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
@@ -111,7 +113,7 @@ const BlogPage = () => {
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
               <div className="text-2xl font-bold text-yellow-400 mb-2">100%</div>
-              <p className="text-purple-100">Conteúdo Prático</p>
+              <p className="text-purple-100">Conteúdo com IA</p>
             </div>
           </div>
         </div>
@@ -137,6 +139,51 @@ const BlogPage = () => {
       <section className="py-20">
         <div className="container mx-auto px-4">
           
+          {/* Posts Gerados Automaticamente */}
+          {blogPosts && blogPosts.length > 0 && (
+            <div className="mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">🤖 Conteúdo Gerado com IA</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {blogPosts.slice(0, 6).map((post: any) => (
+                  <Card key={post.id} className="hover:shadow-xl transition-all duration-300 group">
+                    <div className="relative overflow-hidden">
+                      <div className="aspect-video bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+                        <span className="text-4xl">🤖</span>
+                      </div>
+                      <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs">
+                        IA Generated
+                      </div>
+                    </div>
+                    
+                    <CardHeader>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm font-semibold">
+                          {post.category}
+                        </span>
+                        <span className="text-gray-500 text-sm">5 min</span>
+                      </div>
+                      <CardTitle className="text-lg group-hover:text-purple-600 transition-colors">
+                        {post.title}
+                      </CardTitle>
+                      <p className="text-sm text-gray-500">
+                        {new Date(post.created_at).toLocaleDateString('pt-BR')}
+                      </p>
+                    </CardHeader>
+                    
+                    <CardContent>
+                      <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                      <Link to={`/blog/${post.slug}`}>
+                        <Button variant="outline" className="w-full">
+                          Ler Mais
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Post Destacado */}
           <div className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">📌 Post em Destaque</h2>

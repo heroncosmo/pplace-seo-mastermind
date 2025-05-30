@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -20,6 +19,8 @@ import ServicesPage from "./pages/ServicesPage";
 import LeadPilotPage from "./pages/LeadPilotPage";
 import PricingPage from "./pages/PricingPage";
 import NotFound from "./pages/NotFound";
+import AdminPage from "./pages/AdminPage";
+import DynamicServiceCityPage from "./pages/DynamicServiceCityPage";
 
 // Create QueryClient with proper configuration
 const queryClient = new QueryClient({
@@ -46,6 +47,7 @@ const App: React.FC = () => {
             <Route path="/contato" element={<ContactPage />} />
             <Route path="/portfolio" element={<PortfolioPage />} />
             <Route path="/precos" element={<PricingPage />} />
+            <Route path="/admin" element={<AdminPage />} />
             
             {/* Blog */}
             <Route path="/blog" element={<BlogPage />} />
@@ -61,13 +63,20 @@ const App: React.FC = () => {
             <Route path="/criacao-de-site-:city" element={<CityPage />} />
             <Route path="/criacao-de-site-estado-:state" element={<StatePage />} />
             
-            {/* Serviços por cidade */}
-            <Route path="/ecommerce-:city" element={<ServiceCityPage />} />
-            <Route path="/landing-page-:city" element={<ServiceCityPage />} />
-            <Route path="/leadpilot-:city" element={<ServiceCityPage />} />
-            <Route path="/seo-:city" element={<ServiceCityPage />} />
-            <Route path="/aplicativo-:city" element={<ServiceCityPage />} />
-            <Route path="/sistema-ia-:city" element={<ServiceCityPage />} />
+            {/* Rotas dinâmicas para serviços por cidade */}
+            <Route path="/ecommerce-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/landing-page-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/leadpilot-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/seo-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/aplicativo-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/sistema-ia-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/sites-institucionais-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/automacao-rpa-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/chatbots-ia-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/business-intelligence-:city" element={<DynamicServiceCityPage />} />
+            
+            {/* Rota catch-all para serviços dinâmicos */}
+            <Route path="/*-*" element={<DynamicServiceCityPage />} />
             
             {/* Catch-all route - deve ficar por último */}
             <Route path="*" element={<NotFound />} />
