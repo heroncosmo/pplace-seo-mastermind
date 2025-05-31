@@ -4,69 +4,104 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useGenerateBlogPost, useServices, useCities } from '@/hooks/useContentGeneration';
+import { useServices, useGenerateBlogPost } from '@/hooks/useContentGeneration';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useToast } from '@/components/ui/use-toast';
 
 const AdminPanel = () => {
   const [newService, setNewService] = useState({
     name: '',
     slug: '',
     description: '',
-    basePrice: '',
-    category: ''
+    base_price: 0,
+    category: '',
+    features: [] as string[]
   });
-
-  const { data: services } = useServices();
-  const { data: cities } = useCities();
+  
+  const [newFeature, setNewFeature] = useState('');
+  const [blogTopic, setBlogTopic] = useState('');
+  const [blogCategory, setBlogCategory] = useState('');
+  
+  const { data: services, refetch: refetchServices } = useServices();
   const generateBlogPost = useGenerateBlogPost();
+  const { toast } = useToast();
 
   const handleAddService = async () => {
     try {
-      const { error } = await supabase.from('services').insert({
-        name: newService.name,
-        slug: newService.slug,
-        description: newService.description,
-        base_price: parseFloat(newService.basePrice),
-        category: newService.category,
-        features: ['Recurso 1', 'Recurso 2', 'Recurso 3']
-      });
-
+      const { error } = await supabase
+        .from('services')
+        .insert([newService]);
+      
       if (error) throw error;
-
-      toast.success('Serviço adicionado! Páginas sendo geradas automaticamente...');
-      setNewService({ name: '', slug: '', description: '', basePrice: '', category: '' });
       
-      // Trigger geração automática de páginas para todas as cidades
-      generatePagesForAllCities();
+      toast({
+        title: "Serviço adicionado!",
+        description: "O serviço foi criado com sucesso. As páginas serão geradas automaticamente.",
+      });
       
+      setNewService({
+        name: '',
+        slug: '',
+        description: '',
+        base_price: 0,
+        category: '',
+        features: []
+      });
+      
+      refetchServices();
     } catch (error) {
       console.error('Erro ao adicionar serviço:', error);
-      toast.error('Erro ao adicionar serviço');
+      toast({
+        title: "Erro",
+        description: "Erro ao adicionar serviço.",
+        variant: "destructive"
+      });
     }
   };
 
-  const generatePagesForAllCities = async () => {
-    if (!cities || !services) return;
-    
-    // Esta função seria executada em background
-    toast.info('Sistema gerando páginas para todas as cidades...');
+  const handleAddFeature = () => {
+    if (newFeature.trim()) {
+      setNewService(prev => ({
+        ...prev,
+        features: [...prev.features, newFeature.trim()]
+      }));
+      setNewFeature('');
+    }
+  };
+
+  const handleRemoveFeature = (index: number) => {
+    setNewService(prev => ({
+      ...prev,
+      features: prev.features.filter((_, i) => i !== index)
+    }));
   };
 
   const handleGenerateBlogPost = () => {
-    generateBlogPost.mutate({}, {
+    generateBlogPost.mutate({
+      topic: blogTopic,
+      category: blogCategory
+    }, {
       onSuccess: () => {
-        toast.success('Post do blog gerado com sucesso!');
+        toast({
+          title: "Post gerado!",
+          description: "O post do blog foi gerado com sucesso usando IA.",
+        });
+        setBlogTopic('');
+        setBlogCategory('');
       },
       onError: () => {
-        toast.error('Erro ao gerar post do blog');
+        toast({
+          title: "Erro",
+          description: "Erro ao gerar post do blog.",
+          variant: "destructive"
+        });
       }
     });
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Painel Administrativo PPlace</h1>
+      <h1 className="text-4xl font-bold text-gray-900 mb-8">Painel Administrativo</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Adicionar Novo Serviço */}
@@ -76,91 +111,112 @@ const AdminPanel = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <Input
-              placeholder="Nome do Serviço"
+              placeholder="Nome do serviço"
               value={newService.name}
-              onChange={(e) => setNewService({...newService, name: e.target.value})}
+              onChange={(e) => setNewService(prev => ({ ...prev, name: e.target.value }))}
             />
+            
             <Input
               placeholder="Slug (URL amigável)"
               value={newService.slug}
-              onChange={(e) => setNewService({...newService, slug: e.target.value})}
+              onChange={(e) => setNewService(prev => ({ ...prev, slug: e.target.value }))}
             />
+            
             <Textarea
-              placeholder="Descrição do Serviço"
+              placeholder="Descrição do serviço"
               value={newService.description}
-              onChange={(e) => setNewService({...newService, description: e.target.value})}
+              onChange={(e) => setNewService(prev => ({ ...prev, description: e.target.value }))}
             />
+            
             <Input
-              placeholder="Preço Base"
+              placeholder="Preço base"
               type="number"
-              value={newService.basePrice}
-              onChange={(e) => setNewService({...newService, basePrice: e.target.value})}
+              value={newService.base_price}
+              onChange={(e) => setNewService(prev => ({ ...prev, base_price: Number(e.target.value) }))}
             />
+            
             <Input
               placeholder="Categoria"
               value={newService.category}
-              onChange={(e) => setNewService({...newService, category: e.target.value})}
+              onChange={(e) => setNewService(prev => ({ ...prev, category: e.target.value }))}
             />
+            
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Adicionar característica"
+                  value={newFeature}
+                  onChange={(e) => setNewFeature(e.target.value)}
+                />
+                <Button onClick={handleAddFeature}>Adicionar</Button>
+              </div>
+              
+              <div className="space-y-1">
+                {newService.features.map((feature, index) => (
+                  <div key={index} className="flex justify-between items-center bg-gray-100 p-2 rounded">
+                    <span>{feature}</span>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleRemoveFeature(index)}
+                    >
+                      Remover
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
             <Button onClick={handleAddService} className="w-full">
-              Adicionar Serviço (Gera Todas as Páginas)
+              Criar Serviço e Gerar Páginas
             </Button>
           </CardContent>
         </Card>
 
-        {/* Geração de Conteúdo */}
+        {/* Gerar Post do Blog */}
         <Card>
           <CardHeader>
-            <CardTitle>Geração Automática de Conteúdo</CardTitle>
+            <CardTitle>Gerar Post do Blog com IA</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <Input
+              placeholder="Tópico do post"
+              value={blogTopic}
+              onChange={(e) => setBlogTopic(e.target.value)}
+            />
+            
+            <Input
+              placeholder="Categoria"
+              value={blogCategory}
+              onChange={(e) => setBlogCategory(e.target.value)}
+            />
+            
             <Button 
               onClick={handleGenerateBlogPost}
               disabled={generateBlogPost.isPending}
               className="w-full"
             >
-              {generateBlogPost.isPending ? 'Gerando...' : 'Gerar Post de Blog com IA'}
+              {generateBlogPost.isPending ? 'Gerando...' : 'Gerar Post com IA'}
             </Button>
-            
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h3 className="font-semibold mb-2">Sistema Automático Ativo:</h3>
-              <ul className="text-sm space-y-1">
-                <li>✅ {cities?.length || 0} cidades cadastradas</li>
-                <li>✅ {services?.length || 0} serviços ativos</li>
-                <li>✅ {(cities?.length || 0) * (services?.length || 0)} páginas possíveis</li>
-                <li>✅ Conteúdo gerado automaticamente com Mistral AI</li>
-                <li>✅ SEO otimizado para cada cidade + serviço</li>
-              </ul>
-            </div>
           </CardContent>
         </Card>
-      </div>
 
-      {/* Estatísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
-        <Card>
-          <CardContent className="p-6 text-center">
-            <div className="text-3xl font-bold text-purple-600">{services?.length || 0}</div>
-            <p className="text-gray-600">Serviços Ativos</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6 text-center">
-            <div className="text-3xl font-bold text-blue-600">{cities?.length || 0}</div>
-            <p className="text-gray-600">Cidades</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6 text-center">
-            <div className="text-3xl font-bold text-green-600">
-              {(cities?.length || 0) * (services?.length || 0)}
+        {/* Lista de Serviços */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Serviços Cadastrados</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {services?.map((service: any) => (
+                <div key={service.id} className="border p-4 rounded-lg">
+                  <h3 className="font-semibold">{service.name}</h3>
+                  <p className="text-sm text-gray-600">{service.category}</p>
+                  <p className="text-sm">R$ {service.base_price?.toLocaleString('pt-BR')}</p>
+                  <p className="text-xs text-gray-500">Slug: {service.slug}</p>
+                </div>
+              ))}
             </div>
-            <p className="text-gray-600">Páginas Geradas</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6 text-center">
-            <div className="text-3xl font-bold text-orange-600">∞</div>
-            <p className="text-gray-600">Potencial SEO</p>
           </CardContent>
         </Card>
       </div>

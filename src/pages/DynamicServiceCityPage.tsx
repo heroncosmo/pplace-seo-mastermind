@@ -45,14 +45,14 @@ const DynamicServiceCityPage = () => {
       let foundCity = null;
 
       for (const service of services) {
-        if (url.includes(service.slug)) {
+        if (service.slug && url.includes(service.slug)) {
           foundService = service;
           break;
         }
       }
 
       for (const city of cities) {
-        if (url.includes(city.slug)) {
+        if (city.slug && url.includes(city.slug)) {
           foundCity = city;
           break;
         }
@@ -80,7 +80,7 @@ const DynamicServiceCityPage = () => {
             serviceId: foundService.id,
             cityName: foundCity.name,
             serviceName: foundService.name,
-            stateName: foundCity.states.name
+            stateName: foundCity.states?.name || ''
           }, {
             onSuccess: (data) => {
               setPageData({
@@ -128,9 +128,9 @@ const DynamicServiceCityPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <SEO 
-        title={content.title}
-        description={content.description}
-        keywords={content.meta_keywords}
+        title={content.title || `${service.name} em ${city.name}`}
+        description={content.description || `Serviços de ${service.name} em ${city.name}`}
+        keywords={content.meta_keywords || `${service.name}, ${city.name}`}
         canonical={`https://pplace.com.br${window.location.pathname}`}
         city={city.name}
         service={service.name}
@@ -138,7 +138,7 @@ const DynamicServiceCityPage = () => {
           "@context": "https://schema.org",
           "@type": "Service",
           "name": `${service.name} em ${city.name}`,
-          "description": content.description,
+          "description": content.description || `Serviços de ${service.name} em ${city.name}`,
           "provider": {
             "@type": "Organization",
             "name": "PPlace"
@@ -156,10 +156,10 @@ const DynamicServiceCityPage = () => {
       <section className="bg-gradient-to-br from-purple-900 to-blue-900 text-white py-20">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {content.title}
+            {content.title || `${service.name} em ${city.name}`}
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-4xl mx-auto">
-            {content.description}
+            {content.description || `Serviços profissionais de ${service.name} em ${city.name}`}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="bg-white text-purple-900 hover:bg-gray-100">
