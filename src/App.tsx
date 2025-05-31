@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -63,7 +64,7 @@ const App: React.FC = () => {
             <Route path="/criacao-de-site-:city" element={<CityPage />} />
             <Route path="/criacao-de-site-estado-:state" element={<StatePage />} />
             
-            {/* Rotas dinâmicas para serviços por cidade */}
+            {/* Rotas dinâmicas específicas primeiro */}
             <Route path="/ecommerce-:city" element={<DynamicServiceCityPage />} />
             <Route path="/landing-page-:city" element={<DynamicServiceCityPage />} />
             <Route path="/leadpilot-:city" element={<DynamicServiceCityPage />} />
@@ -74,9 +75,6 @@ const App: React.FC = () => {
             <Route path="/automacao-rpa-:city" element={<DynamicServiceCityPage />} />
             <Route path="/chatbots-ia-:city" element={<DynamicServiceCityPage />} />
             <Route path="/business-intelligence-:city" element={<DynamicServiceCityPage />} />
-            
-            {/* Rota catch-all para serviços dinâmicos */}
-            <Route path="/*-*" element={<DynamicServiceCityPage />} />
             
             {/* Catch-all route - deve ficar por último */}
             <Route path="*" element={<NotFound />} />

@@ -9,6 +9,9 @@ interface DynamicPageHeroProps {
 }
 
 const DynamicPageHero = ({ service, city, content }: DynamicPageHeroProps) => {
+  const whatsappMessage = `Oi%2C%20tudo%20bem%3F%20Gostaria%20de%20saber%20mais%20sobre%20${service.name}%20em%20${city.name}%20da%20PPlace.`;
+  const whatsappUrl = `https://api.whatsapp.com/send?phone=5517981679818&text=${whatsappMessage}`;
+
   return (
     <section className="bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white py-20">
       <div className="container mx-auto px-4 text-center">
@@ -37,11 +40,19 @@ const DynamicPageHero = ({ service, city, content }: DynamicPageHeroProps) => {
         </div>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold shadow-lg">
+          <Button 
+            size="lg" 
+            className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold shadow-lg"
+            onClick={() => window.open(whatsappUrl, '_blank')}
+          >
             🚀 Orçamento Gratuito em 2h
           </Button>
-          <Button size="lg" className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 font-bold shadow-lg">
-            📱 WhatsApp: (11) 99999-9999
+          <Button 
+            size="lg" 
+            className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 font-bold shadow-lg"
+            onClick={() => window.open(whatsappUrl, '_blank')}
+          >
+            📱 WhatsApp: (17) 98167-9818
           </Button>
         </div>
         

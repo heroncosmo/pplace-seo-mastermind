@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 
 const CityPage = () => {
   const { city } = useParams();
@@ -16,37 +17,52 @@ const CityPage = () => {
     {
       title: `E-commerce em ${cityName}`,
       description: `Criamos lojas virtuais profissionais para empresas de ${cityName} com sistema completo de vendas online`,
-      price: "A partir de R$ 2.999"
+      price: "A partir de R$ 2.999",
+      link: `/ecommerce-${city}`
     },
     {
       title: `Landing Pages ${cityName}`,
       description: `Páginas de conversão otimizadas para capturar leads de clientes em ${cityName}`,
-      price: "A partir de R$ 899"
+      price: "A partir de R$ 899",
+      link: `/landing-page-${city}`
     },
     {
       title: `Sites Institucionais ${cityName}`,
       description: `Sites profissionais que transmitem credibilidade para sua empresa em ${cityName}`,
-      price: "A partir de R$ 1.499"
+      price: "A partir de R$ 1.499",
+      link: `/sites-institucionais-${city}`
     },
     {
       title: `Sistema LeadPilot ${cityName}`,
       description: `Revolucione suas vendas em ${cityName} com nosso sistema de IA para conversão de leads`,
-      price: "A partir de R$ 4.999"
+      price: "A partir de R$ 4.999",
+      link: `/leadpilot-${city}`
     },
     {
       title: `Aplicativos Mobile ${cityName}`,
       description: `Apps nativos para Android e iOS para empresas de ${cityName}`,
-      price: "A partir de R$ 8.999"
+      price: "A partir de R$ 8.999",
+      link: `/aplicativo-${city}`
     },
     {
       title: `SEO Local ${cityName}`,
       description: `Otimização para aparecer no Google quando pesquisarem em ${cityName}`,
-      price: "A partir de R$ 799/mês"
+      price: "A partir de R$ 799/mês",
+      link: `/seo-${city}`
     }
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO 
+        title={`Criação de Sites em ${cityName} - PPlace | Especialistas Locais`}
+        description={`Criação de sites profissionais em ${cityName}. A PPlace é especialista em desenvolvimento web e sistemas com IA para empresas de ${cityName}. Orçamento grátis!`}
+        keywords={`criação de sites ${cityName.toLowerCase()}, desenvolvimento web ${cityName.toLowerCase()}, sites ${cityName.toLowerCase()}, pplace ${cityName.toLowerCase()}`}
+        canonical={`https://pplace.com.br/criacao-de-site-${city}`}
+        city={cityName}
+        service="Criação de Sites"
+      />
+      
       <Header />
       
       {/* Hero Section */}
@@ -60,7 +76,11 @@ const CityPage = () => {
             Criamos sites que vendem, convertem e geram resultados reais!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-purple-900 hover:bg-gray-100">
+            <Button 
+              size="lg" 
+              className="bg-white text-purple-900 hover:bg-gray-100"
+              onClick={() => window.open('https://api.whatsapp.com/send?phone=5517981679818&text=Oi%2C%20tudo%20bem%3F%20Gostaria%20de%20um%20orçamento%20para%20criação%20de%20site%20em%20' + cityName, '_blank')}
+            >
               Orçamento Gratuito
             </Button>
             <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-900">
@@ -91,7 +111,10 @@ const CityPage = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-purple-600 mb-4">{service.price}</div>
-                  <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                  <Button 
+                    className="w-full bg-purple-600 hover:bg-purple-700"
+                    onClick={() => window.location.href = service.link}
+                  >
                     Solicitar Orçamento
                   </Button>
                 </CardContent>
@@ -152,11 +175,20 @@ const CityPage = () => {
             Entre em contato agora e receba um orçamento personalizado para sua empresa em {cityName}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
-              WhatsApp: (11) 99999-9999
+            <Button 
+              size="lg" 
+              className="bg-white text-purple-600 hover:bg-gray-100"
+              onClick={() => window.open('https://api.whatsapp.com/send?phone=5517981679818&text=Oi%2C%20tudo%20bem%3F%20Gostaria%20de%20um%20orçamento%20personalizado%20para%20minha%20empresa%20em%20' + cityName, '_blank')}
+            >
+              WhatsApp: (17) 98167-9818
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600">
-              contato@pplace.com.br
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-white text-white hover:bg-white hover:text-purple-600"
+              onClick={() => window.location.href = 'mailto:contato@lojapplace.com'}
+            >
+              contato@lojapplace.com
             </Button>
           </div>
         </div>
