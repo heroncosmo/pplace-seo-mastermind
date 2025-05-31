@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowDown, ArrowUp } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
@@ -12,6 +12,8 @@ import Testimonials from '@/components/Testimonials';
 import CityMap from '@/components/CityMap';
 
 const Index = () => {
+  const whatsappUrl = "https://api.whatsapp.com/send?phone=5517981679818&text=Oi%2C%20tudo%20bem%3F%20Gostaria%20de%20um%20orçamento%20para%20criação%20de%20site%20com%20a%20PPlace.";
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <Header />
@@ -51,10 +53,19 @@ const Index = () => {
             Junte-se a milhares de empresas que confiam na PPlace
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="outline" className="text-purple-600 border-white bg-white hover:bg-gray-100">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="text-purple-600 border-white bg-white hover:bg-gray-100"
+              onClick={() => window.open(whatsappUrl, '_blank')}
+            >
               Solicitar Orçamento
             </Button>
-            <Button size="lg" className="bg-purple-800 hover:bg-purple-900">
+            <Button 
+              size="lg" 
+              className="bg-purple-800 hover:bg-purple-900"
+              onClick={() => window.open(whatsappUrl, '_blank')}
+            >
               Falar com Especialista
             </Button>
           </div>

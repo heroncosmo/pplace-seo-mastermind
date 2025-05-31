@@ -64,7 +64,7 @@ const App: React.FC = () => {
             <Route path="/criacao-de-site-:city" element={<CityPage />} />
             <Route path="/criacao-de-site-estado-:state" element={<StatePage />} />
             
-            {/* Rotas dinâmicas específicas primeiro */}
+            {/* Rotas dinâmicas específicas */}
             <Route path="/ecommerce-:city" element={<DynamicServiceCityPage />} />
             <Route path="/landing-page-:city" element={<DynamicServiceCityPage />} />
             <Route path="/leadpilot-:city" element={<DynamicServiceCityPage />} />
@@ -75,6 +75,8 @@ const App: React.FC = () => {
             <Route path="/automacao-rpa-:city" element={<DynamicServiceCityPage />} />
             <Route path="/chatbots-ia-:city" element={<DynamicServiceCityPage />} />
             <Route path="/business-intelligence-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/marketing-digital-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/marketplace-:city" element={<DynamicServiceCityPage />} />
             
             {/* Catch-all route - deve ficar por último */}
             <Route path="*" element={<NotFound />} />
