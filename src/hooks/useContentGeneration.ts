@@ -77,3 +77,20 @@ export const useServices = () => {
     }
   });
 };
+
+export const useGeneratedContent = (cityId?: number, serviceId?: number) => {
+  return useQuery({
+    queryKey: ['generated-content', cityId, serviceId],
+    queryFn: async () => {
+      let query = supabase.from('generated_content').select('*');
+      
+      if (cityId) query = query.eq('city_id', cityId);
+      if (serviceId) query = query.eq('service_id', serviceId);
+      
+      const { data, error } = await query;
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!cityId || !!serviceId
+  });
+};

@@ -9,7 +9,173 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      blog_posts: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string | null
+          excerpt: string | null
+          id: number
+          published: boolean | null
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string | null
+          excerpt?: string | null
+          id?: number
+          published?: boolean | null
+          title: string
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string | null
+          excerpt?: string | null
+          id?: number
+          published?: boolean | null
+          title?: string
+        }
+        Relationships: []
+      }
+      cities: {
+        Row: {
+          created_at: string | null
+          id: number
+          name: string
+          slug: string
+          state_id: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          name: string
+          slug: string
+          state_id?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          name?: string
+          slug?: string
+          state_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cities_state_id_fkey"
+            columns: ["state_id"]
+            isOneToOne: false
+            referencedRelation: "states"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      generated_content: {
+        Row: {
+          city_id: number | null
+          content: Json | null
+          created_at: string | null
+          description: string | null
+          id: number
+          meta_keywords: string | null
+          service_id: number | null
+          title: string | null
+        }
+        Insert: {
+          city_id?: number | null
+          content?: Json | null
+          created_at?: string | null
+          description?: string | null
+          id?: number
+          meta_keywords?: string | null
+          service_id?: number | null
+          title?: string | null
+        }
+        Update: {
+          city_id?: number | null
+          content?: Json | null
+          created_at?: string | null
+          description?: string | null
+          id?: number
+          meta_keywords?: string | null
+          service_id?: number | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "generated_content_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "generated_content_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services: {
+        Row: {
+          active: boolean | null
+          base_price: number | null
+          category: string | null
+          created_at: string | null
+          description: string | null
+          features: Json | null
+          id: number
+          name: string
+          slug: string
+        }
+        Insert: {
+          active?: boolean | null
+          base_price?: number | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          features?: Json | null
+          id?: number
+          name: string
+          slug: string
+        }
+        Update: {
+          active?: boolean | null
+          base_price?: number | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          features?: Json | null
+          id?: number
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      states: {
+        Row: {
+          code: string
+          created_at: string | null
+          id: number
+          name: string
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          id?: number
+          name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          id?: number
+          name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

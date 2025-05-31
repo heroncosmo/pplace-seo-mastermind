@@ -1,11 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import DynamicPageHero from '@/components/dynamic/DynamicPageHero';
+import DynamicPageContent from '@/components/dynamic/DynamicPageContent';
+import DynamicPageServices from '@/components/dynamic/DynamicPageServices';
+import DynamicPageCTA from '@/components/dynamic/DynamicPageCTA';
 import { useGenerateContent } from '@/hooks/useContentGeneration';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -21,11 +23,9 @@ const DynamicServiceCityPage = () => {
 
   const loadPageData = async () => {
     try {
-      // Extrair serviço e cidade da URL
       const url = window.location.pathname;
       const segments = url.split('-');
       
-      // Encontrar o serviço e cidade
       const { data: services } = await supabase
         .from('services')
         .select('*')
@@ -40,7 +40,6 @@ const DynamicServiceCityPage = () => {
 
       if (!services || !cities) return;
 
-      // Lógica para identificar serviço e cidade na URL
       let foundService = null;
       let foundCity = null;
 
@@ -59,7 +58,6 @@ const DynamicServiceCityPage = () => {
       }
 
       if (foundService && foundCity) {
-        // Verificar se já existe conteúdo gerado
         const { data: existingContent } = await supabase
           .from('generated_content')
           .select('*')
@@ -74,7 +72,6 @@ const DynamicServiceCityPage = () => {
             content: existingContent
           });
         } else {
-          // Gerar conteúdo automaticamente
           generateContent.mutate({
             cityId: foundCity.id,
             serviceId: foundService.id,
@@ -128,9 +125,9 @@ const DynamicServiceCityPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <SEO 
-        title={content.title || `${service.name} em ${city.name}`}
-        description={content.description || `Serviços de ${service.name} em ${city.name}`}
-        keywords={content.meta_keywords || `${service.name}, ${city.name}`}
+        title={content.title || `${service.name} em ${city.name} - PPlace`}
+        description={content.description || `${service.name} profissional em ${city.name}. A PPlace oferece soluções completas em tecnologia com IA avançada.`}
+        keywords={content.meta_keywords || `${service.name}, ${city.name}, desenvolvimento, IA, PPlace`}
         canonical={`https://pplace.com.br${window.location.pathname}`}
         city={city.name}
         service={service.name}
@@ -138,7 +135,7 @@ const DynamicServiceCityPage = () => {
           "@context": "https://schema.org",
           "@type": "Service",
           "name": `${service.name} em ${city.name}`,
-          "description": content.description || `Serviços de ${service.name} em ${city.name}`,
+          "description": content.description || `${service.name} profissional em ${city.name}`,
           "provider": {
             "@type": "Organization",
             "name": "PPlace"
@@ -151,116 +148,10 @@ const DynamicServiceCityPage = () => {
       />
       
       <Header />
-      
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-purple-900 to-blue-900 text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {content.title || `${service.name} em ${city.name}`}
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-4xl mx-auto">
-            {content.description || `Serviços profissionais de ${service.name} em ${city.name}`}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-purple-900 hover:bg-gray-100">
-              Solicitar Orçamento Gratuito
-            </Button>
-            <Button size="lg" className="bg-green-600 hover:bg-green-700">
-              WhatsApp: (11) 99999-9999
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Conteúdo Gerado */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            {content.content && typeof content.content === 'object' && content.content.content ? (
-              <div 
-                className="prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: content.content.content }}
-              />
-            ) : (
-              <div className="prose prose-lg max-w-none">
-                <p className="text-lg text-gray-600 leading-relaxed">
-                  A PPlace é especialista em {service.name} em {city.name}. 
-                  Nossa equipe desenvolve soluções personalizadas que atendem 
-                  às necessidades específicas do mercado local de {city.name}.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Informações do Serviço */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">
-            {service.name} em {city.name}
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl text-purple-600">💰 Investimento</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-gray-900 mb-2">
-                  R$ {service.base_price?.toLocaleString('pt-BR')}
-                </div>
-                <p className="text-gray-600">Preço especial para {city.name}</p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl text-purple-600">📊 Categoria</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-lg font-semibold text-gray-900 mb-2">
-                  {service.category}
-                </div>
-                <p className="text-gray-600">Especialização técnica</p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl text-purple-600">🎯 Localização</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-lg font-semibold text-gray-900 mb-2">
-                  {city.name}
-                </div>
-                <p className="text-gray-600">Atendimento local especializado</p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Final */}
-      <section className="py-20 bg-gradient-to-r from-purple-600 to-blue-600">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
-            Pronto para começar seu projeto em {city.name}?
-          </h2>
-          <p className="text-xl text-purple-100 mb-8">
-            Fale agora com nossos especialistas em {service.name}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
-              Orçamento Gratuito
-            </Button>
-            <Button size="lg" className="bg-green-600 hover:bg-green-700">
-              WhatsApp: (11) 99999-9999
-            </Button>
-          </div>
-        </div>
-      </section>
-      
+      <DynamicPageHero service={service} city={city} content={content} />
+      <DynamicPageContent service={service} city={city} content={content} />
+      <DynamicPageServices service={service} city={city} />
+      <DynamicPageCTA service={service} city={city} />
       <Footer />
     </div>
   );
