@@ -1,102 +1,81 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useServices } from '@/hooks/useContentGeneration';
-import { Loader2, Edit, Trash2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ServicesList = () => {
-  const { data: services, isLoading, error } = useServices();
+  const { data: services, isLoading } = useServices();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const handleToggleService = async (serviceId: number, currentStatus: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('services')
+        .update({ active: !currentStatus })
+        .eq('id', serviceId);
+
+      if (error) throw error;
+
+      queryClient.invalidateQueries({ queryKey: ['services'] });
+      
+      toast({
+        title: "Serviço atualizado!",
+        description: `Serviço ${!currentStatus ? 'ativado' : 'desativado'} com sucesso.`,
+      });
+    } catch (error) {
+      console.error('Error toggling service:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível atualizar o serviço.",
+        variant: "destructive",
+      });
+    }
+  };
 
   if (isLoading) {
     return (
-      <Card className="lg:col-span-2">
+      <Card>
         <CardHeader>
           <CardTitle>Lista de Serviços</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center p-8">
-            <Loader2 className="h-8 w-8 animate-spin" />
-            <span className="ml-2">Carregando serviços...</span>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (error) {
-    return (
-      <Card className="lg:col-span-2">
-        <CardHeader>
-          <CardTitle>Lista de Serviços</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center p-8 text-red-500">
-            Erro ao carregar serviços: {error.message}
-          </div>
+          <p>Carregando serviços...</p>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="lg:col-span-2">
+    <Card>
       <CardHeader>
-        <CardTitle>Lista de Serviços ({services?.length || 0})</CardTitle>
+        <CardTitle>Lista de Serviços</CardTitle>
       </CardHeader>
       <CardContent>
-        {!services || services.length === 0 ? (
-          <div className="text-center p-8 text-gray-500">
-            Nenhum serviço cadastrado ainda.
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {services.map((service) => (
-              <div
-                key={service.id}
-                className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="font-semibold text-lg">{service.name}</h3>
-                      <Badge variant={service.active ? "default" : "secondary"}>
-                        {service.active ? "Ativo" : "Inativo"}
-                      </Badge>
-                      {service.category && (
-                        <Badge variant="outline">{service.category}</Badge>
-                      )}
-                    </div>
-                    
-                    <p className="text-gray-600 mb-2">
-                      Slug: <code className="bg-gray-100 px-1 rounded">/{service.slug}</code>
-                    </p>
-                    
-                    {service.description && (
-                      <p className="text-gray-700 mb-2">{service.description}</p>
-                    )}
-                    
-                    {service.base_price && (
-                      <p className="text-green-600 font-semibold">
-                        Preço base: R$ {service.base_price.toLocaleString('pt-BR')}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="flex gap-2 ml-4">
-                    <Button variant="outline" size="sm">
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
+        <div className="space-y-3">
+          {services?.map((service) => (
+            <div key={service.id} className="flex items-center justify-between p-3 border rounded-lg">
+              <div>
+                <h4 className="font-semibold">{service.name}</h4>
+                <p className="text-sm text-gray-600">{service.description}</p>
+                <p className="text-sm font-medium text-purple-600">
+                  R$ {service.base_price?.toLocaleString('pt-BR')}
+                </p>
               </div>
-            ))}
-          </div>
-        )}
+              <Button
+                onClick={() => handleToggleService(service.id, service.active)}
+                variant={service.active ? "default" : "outline"}
+                size="sm"
+              >
+                {service.active ? 'Ativo' : 'Inativo'}
+              </Button>
+            </div>
+          ))}
+        </div>
       </CardContent>
     </Card>
   );

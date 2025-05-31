@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useQueryClient } from '@tanstack/react-query';
 
 const AddServiceForm = () => {
   const [name, setName] = useState('');
@@ -16,7 +16,29 @@ const AddServiceForm = () => {
   const [basePrice, setBasePrice] = useState('');
   const [category, setCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
   const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const generateSlug = (name: string) => {
+    return name
+      .toLowerCase()
+      .replace(/[áàâãä]/g, 'a')
+      .replace(/[éèêë]/g, 'e')
+      .replace(/[íìîï]/g, 'i')
+      .replace(/[óòôõö]/g, 'o')
+      .replace(/[úùûü]/g, 'u')
+      .replace(/ç/g, 'c')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim();
+  };
+
+  const handleNameChange = (value: string) => {
+    setName(value);
+    setSlug(generateSlug(value));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,9 +58,11 @@ const AddServiceForm = () => {
 
       if (error) throw error;
 
+      queryClient.invalidateQueries({ queryKey: ['services'] });
+      
       toast({
-        title: "Serviço adicionado com sucesso!",
-        description: "O novo serviço foi cadastrado no sistema.",
+        title: "Serviço adicionado!",
+        description: "O novo serviço foi criado com sucesso.",
       });
 
       // Reset form
@@ -51,7 +75,7 @@ const AddServiceForm = () => {
       console.error('Error adding service:', error);
       toast({
         title: "Erro ao adicionar serviço",
-        description: "Ocorreu um erro ao tentar cadastrar o serviço.",
+        description: "Ocorreu um erro ao tentar criar o serviço.",
         variant: "destructive",
       });
     } finally {
@@ -71,8 +95,8 @@ const AddServiceForm = () => {
             <Input
               id="name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ex: Criação de Sites"
+              onChange={(e) => handleNameChange(e.target.value)}
+              placeholder="Ex: E-commerce"
               required
             />
           </div>
@@ -83,7 +107,7 @@ const AddServiceForm = () => {
               id="slug"
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
-              placeholder="Ex: criacao-de-sites"
+              placeholder="ecommerce"
               required
             />
           </div>
@@ -94,7 +118,7 @@ const AddServiceForm = () => {
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Descreva o serviço..."
+              placeholder="Descrição do serviço..."
               rows={3}
             />
           </div>
@@ -106,26 +130,19 @@ const AddServiceForm = () => {
               type="number"
               value={basePrice}
               onChange={(e) => setBasePrice(e.target.value)}
-              placeholder="Ex: 2500"
-              step="0.01"
-              min="0"
+              placeholder="2999"
+              required
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="category">Categoria</Label>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione uma categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="desenvolvimento">Desenvolvimento</SelectItem>
-                <SelectItem value="design">Design</SelectItem>
-                <SelectItem value="marketing">Marketing</SelectItem>
-                <SelectItem value="ia">Inteligência Artificial</SelectItem>
-                <SelectItem value="ecommerce">E-commerce</SelectItem>
-              </SelectContent>
-            </Select>
+            <Input
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              placeholder="desenvolvimento"
+            />
           </div>
 
           <Button type="submit" disabled={isLoading} className="w-full">

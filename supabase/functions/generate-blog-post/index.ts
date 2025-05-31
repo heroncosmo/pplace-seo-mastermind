@@ -26,18 +26,19 @@ serve(async (req) => {
 
     console.log('Gerando post do blog sobre:', { topic, category });
 
-    // Lista de tópicos relevantes se não especificado
     const topics = [
-      'Como a IA está revolucionando o e-commerce brasileiro',
-      'Tendências de desenvolvimento web em 2024',
-      'Por que sua empresa precisa de um site responsivo',
+      'Como a IA está revolucionando o e-commerce brasileiro em 2024',
+      'Tendências de desenvolvimento web que sua empresa precisa conhecer',
+      'Por que sua empresa precisa de um site responsivo e otimizado',
       'O futuro das landing pages com inteligência artificial',
-      'Como escolher a melhor empresa de desenvolvimento web',
-      'ROI de investimentos em tecnologia para PMEs',
-      'Chatbots vs Atendimento humano: qual escolher?',
+      'Como escolher a melhor empresa de desenvolvimento web para seu negócio',
+      'ROI de investimentos em tecnologia para pequenas e médias empresas',
+      'Chatbots vs Atendimento humano: qual a melhor estratégia?',
       'SEO local: como aparecer no Google da sua cidade',
-      'E-commerce: estratégias para aumentar conversões',
-      'Aplicativos mobile: nativo vs híbrido'
+      'E-commerce: 10 estratégias comprovadas para aumentar conversões',
+      'Aplicativos mobile: quando escolher desenvolvimento nativo vs híbrido',
+      'Como o LeadPilot pode multiplicar suas vendas online',
+      'Automação de processos: como a IA pode otimizar seu negócio'
     ];
 
     const selectedTopic = topic || topics[Math.floor(Math.random() * topics.length)];
@@ -46,24 +47,26 @@ serve(async (req) => {
     const prompt = `
     Você é um especialista em marketing digital e tecnologia. Escreva um artigo completo e envolvente sobre "${selectedTopic}".
 
-    O artigo deve ser para o blog da PPlace, empresa líder em tecnologia e IA no Brasil.
+    O artigo é para o blog da PPlace, empresa líder em tecnologia e IA no Brasil, especializada em sites, e-commerce, aplicativos e sistemas como o LeadPilot.
 
     Estrutura do artigo:
-    1. Introdução impactante (150-200 palavras)
-    2. 3-4 seções principais com subtítulos (H2)
-    3. Cada seção com 200-300 palavras
-    4. Conclusão com call-to-action para a PPlace
-    5. Mínimo 1200 palavras total
+    1. Introdução impactante que prenda o leitor (200-250 palavras)
+    2. 4-5 seções principais com subtítulos H2 (cada seção 250-350 palavras)
+    3. Conclusão com call-to-action para a PPlace (150-200 palavras)
+    4. Total: mínimo 1500 palavras
 
-    Requisitos:
+    Requisitos obrigatórios:
     - Tom profissional mas acessível
-    - Incluir estatísticas relevantes (podem ser realistas/estimadas)
-    - Mencionar casos práticos e exemplos
-    - Otimizado para SEO
-    - Incluir chamadas sutis para os serviços da PPlace
+    - Incluir dados e estatísticas relevantes (podem ser estimativas realistas)
+    - Mencionar casos práticos e exemplos brasileiros
+    - Otimizado para SEO com palavras-chave relevantes
+    - Incluir menções sutis aos serviços da PPlace
     - Usar HTML semântico (h1, h2, h3, p, ul, li, strong, em)
+    - Incluir pelo menos 3 dicas práticas actionáveis
+    - Mencionar tendências atuais do mercado
 
-    Não inclua tags html, head ou body. Apenas o conteúdo do artigo.
+    NÃO inclua tags html, head ou body. Apenas o conteúdo do artigo com tags semânticas.
+    Comece com um H1 para o título principal.
     `;
 
     const response = await fetch(MISTRAL_API_ENDPOINT, {
@@ -77,7 +80,7 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: 'Você é um especialista em marketing de conteúdo e tecnologia. Escreva artigos envolventes e informativos.'
+            content: 'Você é um especialista em marketing de conteúdo e tecnologia. Escreva artigos envolventes, informativos e otimizados para SEO.'
           },
           {
             role: 'user',
@@ -85,24 +88,35 @@ serve(async (req) => {
           }
         ],
         temperature: 0.8,
-        max_tokens: 3000
+        max_tokens: 4000
       }),
     });
 
     if (!response.ok) {
+      console.error('Erro na API Mistral:', response.status, await response.text());
       throw new Error(`Erro na API Mistral: ${response.status}`);
     }
 
     const data = await response.json();
     const generatedContent = data.choices[0].message.content;
 
-    // Extrair título do conteúdo gerado ou usar o tópico
     const title = selectedTopic;
-    
-    // Gerar excerpt
-    const excerpt = `Descubra ${selectedTopic.toLowerCase()} e como isso pode transformar seu negócio. Insights exclusivos da PPlace, líder em tecnologia.`;
+    const excerpt = `Descubra ${selectedTopic.toLowerCase()} e como isso pode transformar seu negócio. Insights exclusivos da PPlace, líder em tecnologia e IA.`;
 
-    // Salvar no banco de dados
+    // Gerar slug para o post
+    const slug = selectedTopic
+      .toLowerCase()
+      .replace(/[áàâãä]/g, 'a')
+      .replace(/[éèêë]/g, 'e')
+      .replace(/[íìîï]/g, 'i')
+      .replace(/[óòôõö]/g, 'o')
+      .replace(/[úùûü]/g, 'u')
+      .replace(/ç/g, 'c')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim();
+
     const { data: savedPost, error } = await supabaseClient
       .from('blog_posts')
       .insert({
@@ -110,7 +124,8 @@ serve(async (req) => {
         content: generatedContent,
         excerpt: excerpt,
         category: selectedCategory,
-        published: true
+        published: true,
+        slug: slug
       })
       .select()
       .single();

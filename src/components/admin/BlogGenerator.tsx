@@ -37,6 +37,24 @@ const BlogGenerator = () => {
     }
   };
 
+  const handleGenerateRandom = async () => {
+    try {
+      await generateBlogPost.mutateAsync({ topic: '', category: 'Tecnologia' });
+      
+      toast({
+        title: "Post do blog gerado com sucesso!",
+        description: "Um novo artigo aleatório foi criado.",
+      });
+    } catch (error) {
+      console.error('Error generating blog post:', error);
+      toast({
+        title: "Erro ao gerar post",
+        description: "Ocorreu um erro ao tentar gerar o artigo do blog.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -51,7 +69,6 @@ const BlogGenerator = () => {
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
               placeholder="Ex: Como criar um e-commerce que converte"
-              required
             />
           </div>
 
@@ -73,13 +90,24 @@ const BlogGenerator = () => {
             </Select>
           </div>
 
-          <Button 
-            type="submit" 
-            disabled={generateBlogPost.isPending} 
-            className="w-full"
-          >
-            {generateBlogPost.isPending ? 'Gerando...' : 'Gerar Artigo com IA'}
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              type="submit" 
+              disabled={generateBlogPost.isPending} 
+              className="flex-1"
+            >
+              {generateBlogPost.isPending ? 'Gerando...' : 'Gerar Artigo'}
+            </Button>
+            <Button 
+              type="button"
+              onClick={handleGenerateRandom}
+              disabled={generateBlogPost.isPending} 
+              variant="outline"
+              className="flex-1"
+            >
+              Artigo Aleatório
+            </Button>
+          </div>
         </form>
 
         {generateBlogPost.isPending && (

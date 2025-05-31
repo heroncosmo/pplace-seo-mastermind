@@ -26,29 +26,29 @@ serve(async (req) => {
 
     console.log('Gerando conteúdo para:', { cityName, serviceName, stateName });
 
-    // Prompt otimizado para o Mistral AI
     const prompt = `
     Você é um especialista em marketing digital e copywriting. Crie um conteúdo completo e persuasivo para uma página sobre "${serviceName}" na cidade de "${cityName}, ${stateName}".
 
     A empresa é a PPlace, líder em tecnologia e IA no Brasil. Criamos sites, e-commerce, landing pages, aplicativos e o revolucionário sistema LeadPilot.
 
-    Gere um conteúdo em HTML que inclua:
+    Gere um conteúdo estruturado que inclua:
 
-    1. Uma descrição envolvente sobre o serviço em ${cityName}
-    2. Benefícios específicos para empresas locais
-    3. Por que escolher a PPlace em ${cityName}
-    4. Casos de sucesso (pode ser fictício mas realista)
-    5. Diferenciais competitivos
-    6. Chamadas para ação persuasivas
+    1. Uma introdução envolvente sobre o serviço em ${cityName} (200 palavras)
+    2. Benefícios específicos para empresas locais (300 palavras)
+    3. Por que escolher a PPlace em ${cityName} (250 palavras)
+    4. Casos de sucesso realistas para ${cityName} (200 palavras)
+    5. Diferenciais competitivos (150 palavras)
+    6. Processo de trabalho da PPlace (200 palavras)
 
     O conteúdo deve ser:
-    - Otimizado para SEO local
+    - Otimizado para SEO local com "${serviceName} ${cityName}"
     - Persuasivo e focado em conversão
     - Profissional mas acessível
     - Rico em palavras-chave relevantes
-    - Mínimo 800 palavras
+    - Mínimo 1000 palavras no total
 
-    Retorne apenas o HTML puro sem tags html, head ou body. Use tags semânticas como h2, h3, p, ul, li, strong, em.
+    Use HTML semântico: h2, h3, p, ul, li, strong, em.
+    NÃO inclua tags html, head ou body - apenas o conteúdo.
     `;
 
     const response = await fetch(MISTRAL_API_ENDPOINT, {
@@ -62,7 +62,7 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: 'Você é um especialista em marketing digital e copywriting para empresas de tecnologia. Crie conteúdo persuasivo e otimizado para SEO.'
+            content: 'Você é um especialista em marketing digital e copywriting para empresas de tecnologia. Crie conteúdo persuasivo e otimizado para SEO local.'
           },
           {
             role: 'user',
@@ -70,23 +70,22 @@ serve(async (req) => {
           }
         ],
         temperature: 0.7,
-        max_tokens: 2000
+        max_tokens: 3000
       }),
     });
 
     if (!response.ok) {
+      console.error('Erro na API Mistral:', response.status, await response.text());
       throw new Error(`Erro na API Mistral: ${response.status}`);
     }
 
     const data = await response.json();
     const generatedContent = data.choices[0].message.content;
 
-    // Gerar título e descrição SEO
     const title = `${serviceName} em ${cityName} - PPlace | Especialistas em Tecnologia`;
-    const description = `${serviceName} profissional em ${cityName}. A PPlace oferece soluções completas em tecnologia com IA. Orçamento grátis em 2h!`;
-    const metaKeywords = `${serviceName}, ${cityName}, ${stateName}, desenvolvimento, tecnologia, IA, PPlace, sites, e-commerce`;
+    const description = `${serviceName} profissional em ${cityName}. A PPlace oferece soluções completas em tecnologia com IA. Orçamento grátis em 2h! (17) 98167-9818`;
+    const metaKeywords = `${serviceName}, ${cityName}, ${stateName}, desenvolvimento, tecnologia, IA, PPlace, sites, e-commerce, leadpilot`;
 
-    // Salvar no banco de dados
     const { data: savedContent, error } = await supabaseClient
       .from('generated_content')
       .upsert({
@@ -94,7 +93,7 @@ serve(async (req) => {
         service_id: serviceId,
         title: title,
         description: description,
-        content: { content: generatedContent },
+        content: generatedContent,
         meta_keywords: metaKeywords
       }, {
         onConflict: 'city_id,service_id'
