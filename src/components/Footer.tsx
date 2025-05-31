@@ -52,7 +52,7 @@ const Footer = () => {
       "Joinville", "Florianópolis", "Blumenau", "São José",
       "Criciúma", "Chapecó", "Itajaí", "Lages",
       "Palhoça", "Balneário Camboriú", "Brusque", "Tubarão",
-      "São Bento do Sul", "Concórdia", "Lages", "Jaraguá do Sul",
+      "São Bento do Sul", "Concórdia", "Jaraguá do Sul",
       "Caçador", "Camboriú", "Navegantes", "Rio do Sul", "Videira"
     ],
     "Goiás": [
@@ -78,6 +78,16 @@ const Footer = () => {
     ]
   };
 
+  // Função para converter nome da cidade em slug
+  const cityToSlug = (cityName: string) => {
+    return cityName
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+      .replace(/\s+/g, '-') // Substitui espaços por hífens
+      .replace(/[^a-z0-9-]/g, ''); // Remove caracteres especiais
+  };
+
   return (
     <footer className="bg-slate-900 text-white py-16">
       <div className="container mx-auto px-4">
@@ -92,7 +102,27 @@ const Footer = () => {
             <p className="text-gray-400 mb-4">
               Tecnologia e IA para transformar seu negócio em qualquer cidade do Brasil.
             </p>
-            <p className="text-sm text-gray-500">
+            <div className="space-y-2 text-gray-400">
+              <p>
+                <a 
+                  href="mailto:contato@lojapplace.com" 
+                  className="hover:text-purple-400 transition-colors"
+                >
+                  📧 contato@lojapplace.com
+                </a>
+              </p>
+              <p>
+                <a 
+                  href="https://api.whatsapp.com/send?phone=5517981679818&text=Oi%2C%20tudo%20bem%3F%20Preciso%20de%20ajuda%20com%20os%20serviços%20da%20PPlace." 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-purple-400 transition-colors"
+                >
+                  📱 (17) 98167-9818
+                </a>
+              </p>
+            </div>
+            <p className="text-sm text-gray-500 mt-4">
               © 2024 PPlace. Todos os direitos reservados.
             </p>
           </div>
@@ -106,6 +136,8 @@ const Footer = () => {
               <li><Link to="/aplicativo-sao-paulo" className="text-gray-400 hover:text-purple-400 transition-colors">Aplicativos</Link></li>
               <li><Link to="/sistema-ia-sao-paulo" className="text-gray-400 hover:text-purple-400 transition-colors">Sistemas IA</Link></li>
               <li><Link to="/seo-sao-paulo" className="text-gray-400 hover:text-purple-400 transition-colors">SEO</Link></li>
+              <li><Link to="/business-intelligence-sao-paulo" className="text-gray-400 hover:text-purple-400 transition-colors">Business Intelligence</Link></li>
+              <li><Link to="/marketing-digital-sao-paulo" className="text-gray-400 hover:text-purple-400 transition-colors">Marketing Digital</Link></li>
             </ul>
           </div>
 
@@ -115,15 +147,18 @@ const Footer = () => {
               {Object.entries(brazilCities).map(([state, cities]) => (
                 <div key={state} className="mb-3">
                   <h4 className="text-sm font-semibold text-purple-300 mb-1">{state}</h4>
-                  {cities.slice(0, 6).map((city) => (
-                    <Link 
-                      key={city}
-                      to={`/criacao-de-site-${city.toLowerCase().replace(/\s+/g, '-').replace(/[áàâãä]/g, 'a').replace(/[éèêë]/g, 'e').replace(/[íìîï]/g, 'i').replace(/[óòôõö]/g, 'o').replace(/[úùûü]/g, 'u').replace(/ç/g, 'c')}`}
-                      className="block text-xs text-gray-400 hover:text-purple-400 transition-colors py-0.5"
-                    >
-                      {city}
-                    </Link>
-                  ))}
+                  {cities.slice(0, 6).map((city) => {
+                    const citySlug = cityToSlug(city);
+                    return (
+                      <Link 
+                        key={city}
+                        to={`/criacao-de-site-${citySlug}`}
+                        className="block text-xs text-gray-400 hover:text-purple-400 transition-colors py-0.5"
+                      >
+                        {city}
+                      </Link>
+                    );
+                  })}
                 </div>
               ))}
             </div>
@@ -133,26 +168,21 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contato</h3>
-            <ul className="space-y-2 text-gray-400">
-              <li>
-                <a href="mailto:contato@lojapplace.com" className="hover:text-purple-400 transition-colors">
-                  📧 contato@lojapplace.com
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="https://api.whatsapp.com/send?phone=5517981679818&text=Oi%2C%20tudo%20bem%3F%20Preciso%20de%20ajuda%20com%20os%20serviços%20da%20PPlace%20para%20minha%20empresa." 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="hover:text-purple-400 transition-colors"
-                >
-                  📱 (17) 98167-9818
-                </a>
-              </li>
-              <li>🌐 Todo o Brasil</li>
-              <li>⏰ 24/7 Suporte Online</li>
-            </ul>
+            <h3 className="text-lg font-semibold mb-4">Todas as Cidades</h3>
+            <div className="space-y-2 max-h-48 overflow-y-auto">
+              {Object.values(brazilCities).flat().map((city) => {
+                const citySlug = cityToSlug(city);
+                return (
+                  <Link 
+                    key={city}
+                    to={`/criacao-de-site-${citySlug}`}
+                    className="block text-xs text-gray-400 hover:text-purple-400 transition-colors"
+                  >
+                    Sites em {city}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

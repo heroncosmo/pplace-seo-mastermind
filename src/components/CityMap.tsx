@@ -13,6 +13,16 @@ const CityMap = () => {
     { name: "Bahia", cities: ["Salvador", "Feira de Santana", "Vitória da Conquista", "Camaçari"] }
   ];
 
+  // Função para converter nome da cidade em slug
+  const cityToSlug = (cityName: string) => {
+    return cityName
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+      .replace(/\s+/g, '-') // Substitui espaços por hífens
+      .replace(/[^a-z0-9-]/g, ''); // Remove caracteres especiais
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {states.map((state, index) => (
@@ -22,15 +32,18 @@ const CityMap = () => {
           </CardHeader>
           <CardContent className="pt-4">
             <div className="space-y-2">
-              {state.cities.map((city, cityIndex) => (
-                <Link 
-                  key={cityIndex}
-                  to={`/criacao-de-site-${city.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="block text-sm text-gray-600 hover:text-purple-600 hover:underline transition-colors"
-                >
-                  Criação de Site em {city}
-                </Link>
-              ))}
+              {state.cities.map((city, cityIndex) => {
+                const citySlug = cityToSlug(city);
+                return (
+                  <Link 
+                    key={cityIndex}
+                    to={`/criacao-de-site-${citySlug}`}
+                    className="block text-sm text-gray-600 hover:text-purple-600 hover:underline transition-colors"
+                  >
+                    Criação de Site em {city}
+                  </Link>
+                );
+              })}
             </div>
           </CardContent>
         </Card>

@@ -61,10 +61,12 @@ const App: React.FC = () => {
             
             {/* Páginas geo-localizadas */}
             <Route path="/mapa-cidades" element={<CityMapPage />} />
+            
+            {/* Rotas de cidade simples - CORRIGIDA */}
             <Route path="/criacao-de-site-:city" element={<CityPage />} />
             <Route path="/criacao-de-site-estado-:state" element={<StatePage />} />
             
-            {/* Rotas dinâmicas específicas */}
+            {/* Rotas dinâmicas serviço + cidade - CORRIGIDAS */}
             <Route path="/ecommerce-:city" element={<DynamicServiceCityPage />} />
             <Route path="/landing-page-:city" element={<DynamicServiceCityPage />} />
             <Route path="/leadpilot-:city" element={<DynamicServiceCityPage />} />
@@ -77,6 +79,9 @@ const App: React.FC = () => {
             <Route path="/business-intelligence-:city" element={<DynamicServiceCityPage />} />
             <Route path="/marketing-digital-:city" element={<DynamicServiceCityPage />} />
             <Route path="/marketplace-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/consultoria-ti-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/integracao-sistemas-:city" element={<DynamicServiceCityPage />} />
+            <Route path="/seguranca-digital-:city" element={<DynamicServiceCityPage />} />
             
             {/* Catch-all route - deve ficar por último */}
             <Route path="*" element={<NotFound />} />
