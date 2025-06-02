@@ -6,19 +6,10 @@ import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useCities } from '@/hooks/useContentGeneration';
+import { cityToSlug } from '@/utils/cityUtils';
 
 const CityMapPage = () => {
   const { data: cities, isLoading, error } = useCities();
-
-  // Função para converter nome da cidade em slug
-  const cityToSlug = (cityName: string) => {
-    return cityName
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // Remove acentos
-      .replace(/\s+/g, '-') // Substitui espaços por hífens
-      .replace(/[^a-z0-9-]/g, ''); // Remove caracteres especiais
-  };
 
   if (isLoading) {
     return (

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import { slugToCity } from '@/utils/cityUtils';
 
 const ServiceCityPage = () => {
   const params = useParams();
@@ -14,9 +15,7 @@ const ServiceCityPage = () => {
   // Extrair serviço e cidade da URL
   const serviceSlug = url.split('-')[0].substring(1); // Remove a barra inicial
   const citySlug = url.split('-').slice(1).join('-');
-  const cityName = citySlug.split('-').map(word => 
-    word.charAt(0).toUpperCase() + word.slice(1)
-  ).join(' ');
+  const cityName = slugToCity(citySlug);
 
   const serviceData = {
     'ecommerce': {
@@ -165,11 +164,20 @@ const ServiceCityPage = () => {
               Somos líderes em tecnologia e já transformamos centenas de negócios na região.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <Button size="lg" className="bg-white text-purple-900 hover:bg-gray-100">
+              <Button 
+                size="lg" 
+                className="bg-white text-purple-900 hover:bg-gray-100"
+                onClick={() => window.open('https://api.whatsapp.com/send?phone=5517981679818&text=Oi%2C%20tudo%20bem%3F%20Gostaria%20de%20um%20orçamento%20para%20' + service.name + '%20em%20' + cityName, '_blank')}
+              >
                 Orçamento Gratuito para {cityName}
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-900">
-                WhatsApp: (11) 99999-9999
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white text-white hover:bg-white hover:text-purple-900"
+                onClick={() => window.open('https://api.whatsapp.com/send?phone=5517981679818&text=Oi%2C%20tudo%20bem%3F%20Gostaria%20de%20falar%20sobre%20' + service.name + '%20em%20' + cityName, '_blank')}
+              >
+                WhatsApp: (17) 98167-9818
               </Button>
             </div>
             
@@ -390,11 +398,19 @@ const ServiceCityPage = () => {
             Junte-se às empresas de {cityName} que escolheram a PPlace e multiplicaram seus resultados
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
+            <Button 
+              size="lg" 
+              className="bg-white text-purple-600 hover:bg-gray-100"
+              onClick={() => window.open('https://api.whatsapp.com/send?phone=5517981679818&text=Oi%2C%20tudo%20bem%3F%20Gostaria%20de%20um%20orçamento%20para%20' + service.name + '%20em%20' + cityName, '_blank')}
+            >
               Solicitar Orçamento para {cityName}
             </Button>
-            <Button size="lg" className="bg-green-600 hover:bg-green-700">
-              WhatsApp: (11) 99999-9999
+            <Button 
+              size="lg" 
+              className="bg-green-600 hover:bg-green-700"
+              onClick={() => window.open('https://api.whatsapp.com/send?phone=5517981679818&text=Oi%2C%20tudo%20bem%3F%20Gostaria%20de%20falar%20sobre%20' + service.name + '%20em%20' + cityName, '_blank')}
+            >
+              WhatsApp: (17) 98167-9818
             </Button>
           </div>
         </div>

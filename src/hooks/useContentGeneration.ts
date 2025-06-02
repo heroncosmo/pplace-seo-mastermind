@@ -52,7 +52,7 @@ export const useCities = () => {
         .from('cities')
         .select(`
           *,
-          states(name, code)
+          states!cities_state_id_fkey(name, code)
         `)
         .order('name');
       

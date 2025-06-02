@@ -2,19 +2,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCities } from '@/hooks/useContentGeneration';
+import { cityToSlug } from '@/utils/cityUtils';
 
 const Footer = () => {
   const { data: cities } = useCities();
-
-  // Função para converter nome da cidade em slug
-  const cityToSlug = (cityName: string) => {
-    return cityName
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // Remove acentos
-      .replace(/\s+/g, '-') // Substitui espaços por hífens
-      .replace(/[^a-z0-9-]/g, ''); // Remove caracteres especiais
-  };
 
   // Agrupar cidades por estado
   const stateGroups = cities?.reduce((acc: any, city: any) => {

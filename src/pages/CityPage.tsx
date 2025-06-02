@@ -6,12 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import { slugToCity } from '@/utils/cityUtils';
 
 const CityPage = () => {
   const { city } = useParams();
-  const cityName = city?.split('-').map(word => 
-    word.charAt(0).toUpperCase() + word.slice(1)
-  ).join(' ') || '';
+  const cityName = city ? slugToCity(city) : '';
 
   const services = [
     {

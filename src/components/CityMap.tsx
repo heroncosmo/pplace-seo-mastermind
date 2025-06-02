@@ -3,19 +3,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useCities } from '@/hooks/useContentGeneration';
+import { cityToSlug } from '@/utils/cityUtils';
 
 const CityMap = () => {
   const { data: cities, isLoading, error } = useCities();
-
-  // Função para converter nome da cidade em slug
-  const cityToSlug = (cityName: string) => {
-    return cityName
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // Remove acentos
-      .replace(/\s+/g, '-') // Substitui espaços por hífens
-      .replace(/[^a-z0-9-]/g, ''); // Remove caracteres especiais
-  };
 
   if (isLoading) {
     return (
