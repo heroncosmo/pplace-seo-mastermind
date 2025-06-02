@@ -32,7 +32,7 @@ const App = () => (
               {/* Rotas para criação de sites por cidade */}
               <Route path="/criacao-de-site-:city" element={<CityPage />} />
               
-              {/* Rotas para serviços específicos por cidade */}
+              {/* Rotas para serviços específicos por cidade - usando parâmetro dinâmico */}
               <Route path="/ecommerce-:city" element={<DynamicServiceCityPage />} />
               <Route path="/landing-page-:city" element={<DynamicServiceCityPage />} />
               <Route path="/leadpilot-:city" element={<DynamicServiceCityPage />} />

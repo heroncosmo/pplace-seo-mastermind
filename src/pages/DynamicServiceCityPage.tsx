@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -8,27 +8,28 @@ import DynamicPageHero from '@/components/dynamic/DynamicPageHero';
 import DynamicPageContent from '@/components/dynamic/DynamicPageContent';
 import DynamicPageServices from '@/components/dynamic/DynamicPageServices';
 import DynamicPageCTA from '@/components/dynamic/DynamicPageCTA';
+import { slugToCity } from '@/utils/cityUtils';
 
 const DynamicServiceCityPage = () => {
   const params = useParams();
+  const location = useLocation();
   const [pageData, setPageData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadPageData();
-  }, [params]);
+  }, [location.pathname]);
 
   const loadPageData = async () => {
     try {
-      const url = window.location.pathname;
+      console.log('Loading page data for:', location.pathname);
       
-      // Extrair serviço e cidade da URL
-      const segments = url.split('-');
+      const url = location.pathname;
       let serviceName = '';
       let citySlug = '';
       let cityName = '';
 
-      // Mapear serviços baseado na URL
+      // Detectar serviço e cidade baseado na URL
       if (url.includes('/ecommerce-')) {
         serviceName = 'E-commerce';
         citySlug = url.replace('/ecommerce-', '');
@@ -76,13 +77,15 @@ const DynamicServiceCityPage = () => {
         citySlug = url.replace('/seguranca-digital-', '');
       }
 
-      // Converter slug da cidade para nome legível
-      cityName = citySlug
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
+      console.log('Service detected:', serviceName);
+      console.log('City slug detected:', citySlug);
 
-      // Criar dados simulados para a página
+      // Converter slug da cidade para nome legível
+      cityName = slugToCity(citySlug);
+      
+      console.log('City name converted:', cityName);
+
+      // Criar dados para a página
       const mockService = {
         name: serviceName,
         slug: serviceName.toLowerCase().replace(/\s+/g, '-'),
@@ -108,6 +111,8 @@ const DynamicServiceCityPage = () => {
         city: mockCity,
         content: mockContent
       });
+
+      console.log('Page data loaded successfully');
     } catch (error) {
       console.error('Erro ao carregar dados da página:', error);
     } finally {
@@ -190,13 +195,14 @@ const DynamicServiceCityPage = () => {
     );
   }
 
-  if (!pageData) {
+  if (!pageData || !pageData.service.name) {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
         <div className="container mx-auto px-4 py-20 text-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-6">Página não encontrada</h1>
-          <p className="text-xl text-gray-600">O serviço ou cidade solicitada não foi encontrada.</p>
+          <p className="text-xl text-gray-600 mb-4">O serviço ou cidade solicitada não foi encontrada.</p>
+          <p className="text-gray-500">URL: {location.pathname}</p>
         </div>
         <Footer />
       </div>
@@ -211,7 +217,7 @@ const DynamicServiceCityPage = () => {
         title={content.title}
         description={content.description}
         keywords={content.meta_keywords}
-        canonical={`https://pplace.com.br${window.location.pathname}`}
+        canonical={`https://pplace.com.br${location.pathname}`}
         city={city.name}
         service={service.name}
         schema={{

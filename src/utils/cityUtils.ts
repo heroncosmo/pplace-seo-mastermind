@@ -9,14 +9,20 @@ export const cityToSlug = (cityName: string) => {
 };
 
 export const slugToCity = (slug: string) => {
+  if (!slug) return '';
+  
   return slug
     .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(word => {
+      // Palavras que devem ficar em minúsculo
+      const lowerCaseWords = ['de', 'da', 'do', 'das', 'dos', 'e', 'em', 'na', 'no', 'nas', 'nos'];
+      
+      if (lowerCaseWords.includes(word.toLowerCase())) {
+        return word.toLowerCase();
+      }
+      
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
     .join(' ')
-    .replace(/\bD\b/g, 'd') // Corrige "D" para "d" em casos como "d'Oeste"
-    .replace(/\bDo\b/g, 'do')
-    .replace(/\bDa\b/g, 'da')
-    .replace(/\bDas\b/g, 'das')
-    .replace(/\bDos\b/g, 'dos')
-    .replace(/\bDe\b/g, 'de');
+    .trim();
 };
