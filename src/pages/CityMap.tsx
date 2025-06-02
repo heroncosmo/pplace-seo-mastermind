@@ -5,67 +5,88 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { useCities } from '@/hooks/useContentGeneration';
 
 const CityMapPage = () => {
-  const brazilStates = [
-    {
-      name: "São Paulo",
-      cities: [
-        "São Paulo", "Campinas", "Santos", "Ribeirão Preto", "Cosmorama", 
-        "São José do Rio Preto", "Sorocaba", "Osasco", "Santo André", 
-        "São Bernardo do Campo", "Guarulhos", "Bauru", "Piracicaba"
-      ]
-    },
-    {
-      name: "Rio de Janeiro",
-      cities: [
-        "Rio de Janeiro", "Niterói", "Duque de Caxias", "Nova Iguaçu",
-        "Belford Roxo", "São Gonçalo", "Campos dos Goytacazes", "Petrópolis"
-      ]
-    },
-    {
-      name: "Minas Gerais",
-      cities: [
-        "Belo Horizonte", "Uberlândia", "Contagem", "Juiz de Fora",
-        "Betim", "Montes Claros", "Ribeirão das Neves", "Uberaba"
-      ]
-    },
-    {
-      name: "Rio Grande do Sul",
-      cities: [
-        "Porto Alegre", "Caxias do Sul", "Pelotas", "Santa Maria",
-        "Gravataí", "Viamão", "Novo Hamburgo", "São Leopoldo"
-      ]
-    },
-    {
-      name: "Paraná",
-      cities: [
-        "Curitiba", "Londrina", "Maringá", "Ponta Grossa",
-        "Cascavel", "São José dos Pinhais", "Foz do Iguaçu", "Colombo"
-      ]
-    },
-    {
-      name: "Bahia",
-      cities: [
-        "Salvador", "Feira de Santana", "Vitória da Conquista", "Camaçari",
-        "Juazeiro", "Ilhéus", "Itabuna", "Lauro de Freitas"
-      ]
-    },
-    {
-      name: "Santa Catarina",
-      cities: [
-        "Florianópolis", "Joinville", "Blumenau", "São José",
-        "Criciúma", "Chapecó", "Itajaí", "Lages"
-      ]
-    },
-    {
-      name: "Goiás",
-      cities: [
-        "Goiânia", "Aparecida de Goiânia", "Anápolis", "Rio Verde",
-        "Luziânia", "Águas Lindas de Goiás", "Valparaíso de Goiás"
-      ]
+  const { data: cities, isLoading, error } = useCities();
+
+  // Função para converter nome da cidade em slug
+  const cityToSlug = (cityName: string) => {
+    return cityName
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+      .replace(/\s+/g, '-') // Substitui espaços por hífens
+      .replace(/[^a-z0-9-]/g, ''); // Remove caracteres especiais
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Criação de Sites em Todo o Brasil
+              </h1>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Carregando cidades...
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, index) => (
+                <Card key={index} className="animate-pulse">
+                  <CardHeader className="bg-gray-200">
+                    <div className="h-6 bg-gray-300 rounded"></div>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <div className="space-y-3">
+                      {[...Array(6)].map((_, cityIndex) => (
+                        <div key={cityIndex} className="h-4 bg-gray-200 rounded"></div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="py-20">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Erro ao Carregar Cidades
+            </h1>
+            <p className="text-xl text-red-600">
+              Não foi possível carregar as cidades. Tente novamente mais tarde.
+            </p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Agrupar cidades por estado
+  const stateGroups = cities?.reduce((acc: any, city: any) => {
+    const stateName = city.states?.name;
+    if (!stateName) return acc;
+    
+    if (!acc[stateName]) {
+      acc[stateName] = [];
     }
-  ];
+    acc[stateName].push(city);
+    return acc;
+  }, {}) || {};
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -84,27 +105,27 @@ const CityMapPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {brazilStates.map((state, index) => (
-              <Card key={index} className="hover:shadow-xl transition-all duration-300 border-2 hover:border-purple-200">
+            {Object.entries(stateGroups).map(([stateName, stateCities]: [string, any]) => (
+              <Card key={stateName} className="hover:shadow-xl transition-all duration-300 border-2 hover:border-purple-200">
                 <CardHeader className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
-                  <CardTitle className="text-xl">{state.name}</CardTitle>
+                  <CardTitle className="text-xl">{stateName}</CardTitle>
                 </CardHeader>
                 <CardContent className="pt-6">
                   <div className="space-y-3">
-                    {state.cities.map((city, cityIndex) => (
-                      <div key={cityIndex}>
+                    {stateCities.map((city: any) => (
+                      <div key={city.id}>
                         <Link 
-                          to={`/criacao-de-site-${city.toLowerCase().replace(/\s+/g, '-').replace(/ç/g, 'c').replace(/ã/g, 'a').replace(/á/g, 'a').replace(/é/g, 'e').replace(/ê/g, 'e').replace(/í/g, 'i').replace(/ó/g, 'o').replace(/ô/g, 'o').replace(/ú/g, 'u')}`}
+                          to={`/criacao-de-site-${cityToSlug(city.name)}`}
                           className="block text-sm text-gray-600 hover:text-purple-600 hover:underline transition-colors py-1"
                         >
-                          🌐 Criação de Site em {city}
+                          🌐 Criação de Site em {city.name}
                         </Link>
                       </div>
                     ))}
                   </div>
                   <div className="mt-6 pt-4 border-t">
                     <Button className="w-full bg-purple-600 hover:bg-purple-700 text-sm">
-                      Ver Todos os Serviços em {state.name}
+                      Ver Todos os Serviços em {stateName}
                     </Button>
                   </div>
                 </CardContent>

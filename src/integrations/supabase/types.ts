@@ -9,33 +9,75 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          email: string
+          id: number
+          name: string | null
+          password_hash: string
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          email: string
+          id?: number
+          name?: string | null
+          password_hash: string
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          email?: string
+          id?: number
+          name?: string | null
+          password_hash?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
+          author: string | null
           category: string | null
           content: string
           created_at: string | null
           excerpt: string | null
+          featured_image: string | null
           id: number
           published: boolean | null
+          slug: string | null
+          tags: string[] | null
           title: string
+          updated_at: string | null
         }
         Insert: {
+          author?: string | null
           category?: string | null
           content: string
           created_at?: string | null
           excerpt?: string | null
+          featured_image?: string | null
           id?: number
           published?: boolean | null
+          slug?: string | null
+          tags?: string[] | null
           title: string
+          updated_at?: string | null
         }
         Update: {
+          author?: string | null
           category?: string | null
           content?: string
           created_at?: string | null
           excerpt?: string | null
+          featured_image?: string | null
           id?: number
           published?: boolean | null
+          slug?: string | null
+          tags?: string[] | null
           title?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -44,6 +86,7 @@ export type Database = {
           created_at: string | null
           id: number
           name: string
+          population: number | null
           slug: string
           state_id: number | null
         }
@@ -51,6 +94,7 @@ export type Database = {
           created_at?: string | null
           id?: number
           name: string
+          population?: number | null
           slug: string
           state_id?: number | null
         }
@@ -58,6 +102,7 @@ export type Database = {
           created_at?: string | null
           id?: number
           name?: string
+          population?: number | null
           slug?: string
           state_id?: number | null
         }
@@ -161,18 +206,45 @@ export type Database = {
           created_at: string | null
           id: number
           name: string
+          region: string | null
         }
         Insert: {
           code: string
           created_at?: string | null
           id?: number
           name: string
+          region?: string | null
         }
         Update: {
           code?: string
           created_at?: string | null
           id?: number
           name?: string
+          region?: string | null
+        }
+        Relationships: []
+      }
+      system_config: {
+        Row: {
+          config_key: string
+          config_value: Json | null
+          created_at: string | null
+          id: number
+          updated_at: string | null
+        }
+        Insert: {
+          config_key: string
+          config_value?: Json | null
+          created_at?: string | null
+          id?: number
+          updated_at?: string | null
+        }
+        Update: {
+          config_key?: string
+          config_value?: Json | null
+          created_at?: string | null
+          id?: number
+          updated_at?: string | null
         }
         Relationships: []
       }

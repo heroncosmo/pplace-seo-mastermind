@@ -1,82 +1,10 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useCities } from '@/hooks/useContentGeneration';
 
 const Footer = () => {
-  const brazilCities = {
-    "São Paulo": [
-      "São Paulo", "Campinas", "Santos", "Ribeirão Preto", "Cosmorama", 
-      "São José do Rio Preto", "Sorocaba", "Osasco", "Santo André", 
-      "São Bernardo do Campo", "Guarulhos", "Bauru", "Piracicaba",
-      "Jundiaí", "Diadema", "Mauá", "Carapicuíba", "Itaquaquecetuba",
-      "Franca", "Limeira", "Suzano", "Taboão da Serra", "Sumaré",
-      "Mogi das Cruzes", "São Vicente", "Americana", "Santa Bárbara d'Oeste",
-      "Praia Grande", "Jacareí", "Araraquara", "Dracena", "Marília"
-    ],
-    "Rio de Janeiro": [
-      "Rio de Janeiro", "São Gonçalo", "Duque de Caxias", "Nova Iguaçu",
-      "Niterói", "Belford Roxo", "Campos dos Goytacazes", "São João de Meriti",
-      "Petrópolis", "Volta Redonda", "Magé", "Itaboraí", "Macaé", 
-      "Cabo Frio", "Nova Friburgo", "Barra Mansa", "Angra dos Reis",
-      "Mesquita", "Nilópolis", "Maricá", "Teresópolis", "Resende"
-    ],
-    "Minas Gerais": [
-      "Belo Horizonte", "Uberlândia", "Contagem", "Juiz de Fora",
-      "Betim", "Montes Claros", "Ribeirão das Neves", "Uberaba",
-      "Governador Valadares", "Ipatinga", "Sete Lagoas", "Divinópolis",
-      "Santa Luzia", "Ibirité", "Poços de Caldas", "Patos de Minas",
-      "Pouso Alegre", "Teófilo Otoni", "Barbacena", "Sabará", "Vespasiano"
-    ],
-    "Paraná": [
-      "Curitiba", "Londrina", "Maringá", "Ponta Grossa",
-      "Cascavel", "São José dos Pinhais", "Foz do Iguaçu", "Colombo",
-      "Guarapuava", "Paranaguá", "Araucária", "Toledo", "Apucarana",
-      "Pinhais", "Campo Largo", "Arapongas", "Almirante Tamandaré",
-      "Umuarama", "Piraquara", "Cambé", "Campo Mourão", "Fazenda Rio Grande"
-    ],
-    "Rio Grande do Sul": [
-      "Porto Alegre", "Caxias do Sul", "Pelotas", "Canoas",
-      "Santa Maria", "Gravataí", "Viamão", "Novo Hamburgo",
-      "São Leopoldo", "Rio Grande", "Alvorada", "Passo Fundo",
-      "Sapucaia do Sul", "Uruguaiana", "Santa Cruz do Sul", "Cachoeirinha",
-      "Bagé", "Bento Gonçalves", "Erechim", "Guaíba", "Cachoeira do Sul"
-    ],
-    "Bahia": [
-      "Salvador", "Feira de Santana", "Vitória da Conquista", "Camaçari",
-      "Juazeiro", "Ilhéus", "Itabuna", "Lauro de Freitas",
-      "Jequié", "Alagoinhas", "Paulo Afonso", "Simões Filho",
-      "Teixeira de Freitas", "Barreiras", "Candeias", "Guanambi",
-      "Jacobina", "Porto Seguro", "Eunápolis", "Santo Antônio de Jesus"
-    ],
-    "Santa Catarina": [
-      "Joinville", "Florianópolis", "Blumenau", "São José",
-      "Criciúma", "Chapecó", "Itajaí", "Lages",
-      "Palhoça", "Balneário Camboriú", "Brusque", "Tubarão",
-      "São Bento do Sul", "Concórdia", "Jaraguá do Sul",
-      "Caçador", "Camboriú", "Navegantes", "Rio do Sul", "Videira"
-    ],
-    "Goiás": [
-      "Goiânia", "Aparecida de Goiânia", "Anápolis", "Rio Verde",
-      "Luziânia", "Águas Lindas de Goiás", "Valparaíso de Goiás",
-      "Trindade", "Formosa", "Novo Gama", "Itumbiara", "Senador Canedo",
-      "Catalão", "Jataí", "Planaltina", "Caldas Novas", "Santo Antônio do Descoberto",
-      "Goianésia", "Cidade Ocidental", "Mineiros", "Cristalina"
-    ],
-    "Ceará": [
-      "Fortaleza", "Caucaia", "Juazeiro do Norte", "Maracanaú",
-      "Sobral", "Crato", "Itapipoca", "Maranguape",
-      "Iguatu", "Quixadá", "Canindé", "Aquiraz",
-      "Pacatuba", "Crateús", "São Gonçalo do Amarante", "Tianguá",
-      "Aracati", "Cascavel", "Pacajus", "Icó", "Horizonte"
-    ],
-    "Pernambuco": [
-      "Recife", "Jaboatão dos Guararapes", "Olinda", "Caruaru",
-      "Petrolina", "Paulista", "Cabo de Santo Agostinho", "Camaragibe",
-      "Garanhuns", "Vitória de Santo Antão", "Igarassu", "São Lourenço da Mata",
-      "Santa Cruz do Capibaribe", "Abreu e Lima", "Ipojuca", "Serra Talhada",
-      "Araripina", "Gravatá", "Carpina", "Goiana", "Belo Jardim"
-    ]
-  };
+  const { data: cities } = useCities();
 
   // Função para converter nome da cidade em slug
   const cityToSlug = (cityName: string) => {
@@ -87,6 +15,21 @@ const Footer = () => {
       .replace(/\s+/g, '-') // Substitui espaços por hífens
       .replace(/[^a-z0-9-]/g, ''); // Remove caracteres especiais
   };
+
+  // Agrupar cidades por estado
+  const stateGroups = cities?.reduce((acc: any, city: any) => {
+    const stateName = city.states?.name;
+    if (!stateName) return acc;
+    
+    if (!acc[stateName]) {
+      acc[stateName] = [];
+    }
+    acc[stateName].push(city);
+    return acc;
+  }, {}) || {};
+
+  // Pegar principais cidades para exibir na última coluna
+  const allCities = cities?.slice(0, 50) || [];
 
   return (
     <footer className="bg-slate-900 text-white py-16">
@@ -144,18 +87,18 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Principais Cidades</h3>
             <div className="space-y-1 max-h-48 overflow-y-auto">
-              {Object.entries(brazilCities).map(([state, cities]) => (
-                <div key={state} className="mb-3">
-                  <h4 className="text-sm font-semibold text-purple-300 mb-1">{state}</h4>
-                  {cities.slice(0, 6).map((city) => {
-                    const citySlug = cityToSlug(city);
+              {Object.entries(stateGroups).slice(0, 6).map(([stateName, stateCities]: [string, any]) => (
+                <div key={stateName} className="mb-3">
+                  <h4 className="text-sm font-semibold text-purple-300 mb-1">{stateName}</h4>
+                  {stateCities.slice(0, 6).map((city: any) => {
+                    const citySlug = cityToSlug(city.name);
                     return (
                       <Link 
-                        key={city}
+                        key={city.id}
                         to={`/criacao-de-site-${citySlug}`}
                         className="block text-xs text-gray-400 hover:text-purple-400 transition-colors py-0.5"
                       >
-                        {city}
+                        {city.name}
                       </Link>
                     );
                   })}
@@ -170,15 +113,15 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Todas as Cidades</h3>
             <div className="space-y-2 max-h-48 overflow-y-auto">
-              {Object.values(brazilCities).flat().map((city) => {
-                const citySlug = cityToSlug(city);
+              {allCities.map((city: any) => {
+                const citySlug = cityToSlug(city.name);
                 return (
                   <Link 
-                    key={city}
+                    key={city.id}
                     to={`/criacao-de-site-${citySlug}`}
                     className="block text-xs text-gray-400 hover:text-purple-400 transition-colors"
                   >
-                    Sites em {city}
+                    Sites em {city.name}
                   </Link>
                 );
               })}
