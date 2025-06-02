@@ -10,6 +10,7 @@ import Hero from '@/components/Hero';
 import Services from '@/components/Services';
 import Testimonials from '@/components/Testimonials';
 import CityMap from '@/components/CityMap';
+import SEOCityServiceLinks from '@/components/SEOCityServiceLinks';
 
 const Index = () => {
   const whatsappUrl = "https://api.whatsapp.com/send?phone=5517981679818&text=Oi%2C%20tudo%20bem%3F%20Gostaria%20de%20um%20orçamento%20para%20criação%20de%20site%20com%20a%20PPlace.";
@@ -40,6 +41,9 @@ const Index = () => {
           <CityMap />
         </div>
       </section>
+
+      {/* Links SEO para todas as combinações */}
+      <SEOCityServiceLinks />
 
       <Testimonials />
       
