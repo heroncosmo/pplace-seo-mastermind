@@ -61,16 +61,19 @@ const SEOCityServiceLinks = () => {
               
               {stateCities.slice(0, 8).map((city: any) => {
                 const citySlug = cityToSlug(city.name);
-                console.log(`Link gerado: /criacao-de-site-${citySlug} para cidade: ${city.name}`);
+                const mainCityLink = `/criacao-de-site-${citySlug}`;
+                console.log(`=== TESTANDO LINKS PARA ${city.name} ===`);
+                console.log(`Link principal: ${mainCityLink}`);
+                
                 return (
                   <div key={city.id} className="mb-4">
                     <h4 className="font-semibold text-gray-800 mb-2">{city.name}</h4>
                     <div className="grid grid-cols-2 gap-1 text-xs">
                       {/* Link principal da cidade */}
                       <Link 
-                        to={`/criacao-de-site-${citySlug}`}
+                        to={mainCityLink}
                         className="text-blue-600 hover:text-blue-800 hover:underline"
-                        onClick={() => console.log(`Clicou em: /criacao-de-site-${citySlug}`)}
+                        onClick={() => console.log(`Clicou em: ${mainCityLink}`)}
                       >
                         Sites em {city.name}
                       </Link>
@@ -78,13 +81,14 @@ const SEOCityServiceLinks = () => {
                       {/* Links dos principais serviços */}
                       {serviceRoutes.slice(0, 7).map((service) => {
                         const serviceLink = `/${service.slug}-${citySlug}`;
-                        console.log(`Link de serviço gerado: ${serviceLink} para ${service.name} em ${city.name}`);
+                        console.log(`Link de serviço: ${serviceLink} (${service.name} em ${city.name})`);
+                        
                         return (
                           <Link 
                             key={service.slug}
                             to={serviceLink}
                             className="text-gray-600 hover:text-purple-600 hover:underline"
-                            onClick={() => console.log(`Clicou em: ${serviceLink}`)}
+                            onClick={() => console.log(`Clicou em serviço: ${serviceLink}`)}
                           >
                             {service.name}
                           </Link>

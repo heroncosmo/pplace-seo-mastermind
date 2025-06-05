@@ -45,50 +45,32 @@ const DynamicServiceCityPage = () => {
       console.log('URL atual:', location.pathname);
       console.log('Params recebidos:', params);
       
-      // Obter o parâmetro city diretamente do useParams
-      const cityParam = params.city;
-      console.log('City param:', cityParam);
+      // A URL tem o formato: /servico-cidade
+      // O parâmetro city contém o slug da cidade
+      const citySlug = params.city;
+      console.log('City slug extraído:', citySlug);
       
-      if (!cityParam) {
+      if (!citySlug) {
         console.error('Parâmetro city não encontrado');
         setLoading(false);
         return;
       }
 
-      // Determinar o serviço baseado na rota atual
-      let serviceSlug = '';
-      const pathname = location.pathname;
+      // Extrair o serviço do pathname
+      // Exemplo: /ecommerce-sao-paulo -> serviceSlug = 'ecommerce'
+      const pathSegments = location.pathname.split('/')[1]; // Remove a primeira barra
+      console.log('Path segments:', pathSegments);
       
-      if (pathname.includes('/ecommerce-')) {
-        serviceSlug = 'ecommerce';
-      } else if (pathname.includes('/landing-page-')) {
-        serviceSlug = 'landing-page';
-      } else if (pathname.includes('/leadpilot-')) {
-        serviceSlug = 'leadpilot';
-      } else if (pathname.includes('/seo-')) {
-        serviceSlug = 'seo';
-      } else if (pathname.includes('/aplicativo-')) {
-        serviceSlug = 'aplicativo';
-      } else if (pathname.includes('/sistema-ia-')) {
-        serviceSlug = 'sistema-ia';
-      } else if (pathname.includes('/sites-institucionais-')) {
-        serviceSlug = 'sites-institucionais';
-      } else if (pathname.includes('/automacao-rpa-')) {
-        serviceSlug = 'automacao-rpa';
-      } else if (pathname.includes('/chatbots-ia-')) {
-        serviceSlug = 'chatbots-ia';
-      } else if (pathname.includes('/business-intelligence-')) {
-        serviceSlug = 'business-intelligence';
-      } else if (pathname.includes('/marketing-digital-')) {
-        serviceSlug = 'marketing-digital';
-      } else if (pathname.includes('/marketplace-')) {
-        serviceSlug = 'marketplace';
-      } else if (pathname.includes('/consultoria-ti-')) {
-        serviceSlug = 'consultoria-ti';
-      } else if (pathname.includes('/integracao-sistemas-')) {
-        serviceSlug = 'integracao-sistemas';
-      } else if (pathname.includes('/seguranca-digital-')) {
-        serviceSlug = 'seguranca-digital';
+      // Encontrar onde termina o serviço e onde começa a cidade
+      let serviceSlug = '';
+      
+      // Iterar pelos serviços para encontrar qual coincide com o início da URL
+      const serviceKeys = Object.keys(serviceMap);
+      for (const key of serviceKeys) {
+        if (pathSegments.startsWith(key + '-')) {
+          serviceSlug = key;
+          break;
+        }
       }
       
       console.log('Serviço determinado:', serviceSlug);
@@ -99,12 +81,13 @@ const DynamicServiceCityPage = () => {
       if (!serviceData) {
         console.error('Serviço não encontrado:', serviceSlug);
         console.log('Serviços disponíveis:', Object.keys(serviceMap));
+        console.log('Path completo para análise:', location.pathname);
         setLoading(false);
         return;
       }
 
       // Converter slug da cidade para nome legível
-      const cityName = slugToCity(cityParam);
+      const cityName = slugToCity(citySlug);
       
       console.log('Serviço encontrado:', serviceData.name);
       console.log('Nome da cidade convertido:', cityName);
@@ -119,7 +102,7 @@ const DynamicServiceCityPage = () => {
 
       const mockCity = {
         name: cityName,
-        slug: cityParam,
+        slug: citySlug,
         states: { name: 'Brasil', code: 'BR' }
       };
 
