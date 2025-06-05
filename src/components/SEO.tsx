@@ -18,7 +18,7 @@ const SEO = ({
   description, 
   keywords, 
   canonical, 
-  ogImage = "https://pplace.com.br/og-image.jpg",
+  ogImage = "https://pplace.com.br/pplace-social.jpg",
   ogType = "website",
   city,
   service,
@@ -34,7 +34,7 @@ const SEO = ({
     "@type": "Organization",
     "name": "PPlace",
     "url": siteUrl,
-    "logo": `${siteUrl}/logo.png`,
+    "logo": `${siteUrl}/pplace-logo.png`,
     "description": "A PPlace é a empresa líder em desenvolvimento de sites, e-commerce, landing pages e sistemas com IA no Brasil. Criamos o LeadPilot, sistema revolucionário de conversão de leads.",
     "address": {
       "@type": "PostalAddress",
@@ -42,7 +42,7 @@ const SEO = ({
     },
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+55-11-99999-9999",
+      "telephone": "+55-17-98167-9818",
       "contactType": "customer service",
       "availableLanguage": "Portuguese"
     },
@@ -69,7 +69,7 @@ const SEO = ({
       "addressLocality": city,
       "addressCountry": "BR"
     },
-    "telephone": "+55-11-99999-9999",
+    "telephone": "+55-17-98167-9818",
     "url": fullCanonical,
     "priceRange": "$$",
     "openingHours": "Mo-Fr 08:00-18:00"

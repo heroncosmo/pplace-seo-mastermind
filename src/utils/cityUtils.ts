@@ -11,6 +11,89 @@ export const cityToSlug = (cityName: string) => {
 export const slugToCity = (slug: string) => {
   if (!slug) return '';
   
+  // Mapeamento específico para cidades com nomes compostos comuns
+  const cityMappings: { [key: string]: string } = {
+    'sao-paulo': 'São Paulo',
+    'rio-de-janeiro': 'Rio de Janeiro',
+    'belo-horizonte': 'Belo Horizonte',
+    'porto-alegre': 'Porto Alegre',
+    'sao-jose': 'São José',
+    'sao-bernardo-do-campo': 'São Bernardo do Campo',
+    'santo-andre': 'Santo André',
+    'nova-iguacu': 'Nova Iguaçu',
+    'duque-de-caxias': 'Duque de Caxias',
+    'campo-grande': 'Campo Grande',
+    'sao-goncalo': 'São Gonçalo',
+    'mogi-das-cruzes': 'Mogi das Cruzes',
+    'ribeirao-preto': 'Ribeirão Preto',
+    'sorocaba': 'Sorocaba',
+    'santos': 'Santos',
+    'joinville': 'Joinville',
+    'contagem': 'Contagem',
+    'aracaju': 'Aracaju',
+    'feira-de-santana': 'Feira de Santana',
+    'cuiaba': 'Cuiabá',
+    'joao-pessoa': 'João Pessoa',
+    'jaboatao-dos-guararapes': 'Jaboatão dos Guararapes',
+    'sao-jose-dos-campos': 'São José dos Campos',
+    'uberlandia': 'Uberlândia',
+    'sao-jose-do-rio-preto': 'São José do Rio Preto',
+    'campos-dos-goytacazes': 'Campos dos Goytacazes',
+    'belford-roxo': 'Belford Roxo',
+    'aparecida-de-goiania': 'Aparecida de Goiânia',
+    'blumenau': 'Blumenau',
+    'volta-redonda': 'Volta Redonda',
+    'carapicuiba': 'Carapicuíba',
+    'petropolis': 'Petrópolis',
+    'canoas': 'Canoas',
+    'cascavel': 'Cascavel',
+    'franca': 'Franca',
+    'ribeirao-das-neves': 'Ribeirão das Neves',
+    'vila-velha': 'Vila Velha',
+    'santa-maria': 'Santa Maria',
+    'serra': 'Serra',
+    'camaragibe': 'Camaragibe',
+    'maua': 'Mauá',
+    'sao-caetano-do-sul': 'São Caetano do Sul',
+    'olinda': 'Olinda',
+    'guaruja': 'Guarujá',
+    'caruaru': 'Caruaru',
+    'anapolis': 'Anápolis',
+    'itaquaquecetuba': 'Itaquaquecetuba',
+    'limeira': 'Limeira',
+    'suzano': 'Suzano',
+    'ponta-grossa': 'Ponta Grossa',
+    'rio-branco': 'Rio Branco',
+    'foz-do-iguacu': 'Foz do Iguaçu',
+    'imperatriz': 'Imperatriz',
+    'ipatinga': 'Ipatinga',
+    'sao-vicente': 'São Vicente',
+    'embu-das-artes': 'Embu das Artes',
+    'sobral': 'Sobral',
+    'uberaba': 'Uberaba',
+    'presidente-prudente': 'Presidente Prudente',
+    'americana': 'Americana',
+    'sao-jose-dos-pinhais': 'São José dos Pinhais',
+    'praia-grande': 'Praia Grande',
+    'toledo': 'Toledo',
+    'cachoeirinha': 'Cachoeirinha',
+    'santa-luzia': 'Santa Luzia',
+    'camaçari': 'Camaçari',
+    'rio-das-ostras': 'Rio das Ostras',
+    'novo-hamburgo': 'Novo Hamburgo',
+    'bauru': 'Bauru',
+    'francisco-morato': 'Francisco Morato',
+    'são-jose': 'São José',
+    'manaus': 'Manaus',
+    'cosmorama': 'Cosmorama'
+  };
+
+  // Primeiro verifica se existe um mapeamento específico
+  if (cityMappings[slug]) {
+    return cityMappings[slug];
+  }
+  
+  // Senão, usa a conversão padrão
   return slug
     .split('-')
     .map(word => {

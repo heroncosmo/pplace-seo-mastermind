@@ -102,13 +102,14 @@ const SEOCityServiceLinks = () => {
               const citySlug = cityToSlug(city.name);
               return (
                 <div key={city.id} className="space-y-1">
+                  <h4 className="font-semibold text-gray-700 mb-1">{city.name}</h4>
                   {serviceRoutes.map((service) => (
                     <Link 
                       key={`${service.slug}-${city.id}`}
                       to={`/${service.slug}-${citySlug}`}
                       className="block text-gray-500 hover:text-purple-600 hover:underline"
                     >
-                      {service.name} {city.name}
+                      {service.name}
                     </Link>
                   ))}
                 </div>

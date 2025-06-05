@@ -16,94 +16,80 @@ const DynamicServiceCityPage = () => {
   const [pageData, setPageData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  // Mapeamento completo de serviços
+  const serviceMap = {
+    'ecommerce': { name: 'E-commerce', price: 2999, description: 'Lojas virtuais profissionais que vendem 24/7' },
+    'landing-page': { name: 'Landing Page', price: 899, description: 'Páginas de conversão de alta performance' },
+    'leadpilot': { name: 'LeadPilot', price: 4999, description: 'Sistema de IA que multiplica suas vendas' },
+    'seo': { name: 'SEO', price: 799, description: 'Otimização para aparecer no Google' },
+    'aplicativo': { name: 'Aplicativo Mobile', price: 8999, description: 'Apps nativos para Android e iOS' },
+    'sistema-ia': { name: 'Sistema com IA', price: 12999, description: 'Soluções personalizadas com inteligência artificial' },
+    'sites-institucionais': { name: 'Sites Institucionais', price: 1499, description: 'Sites profissionais para sua empresa' },
+    'automacao-rpa': { name: 'Automação RPA', price: 7999, description: 'Automatização de processos empresariais' },
+    'chatbots-ia': { name: 'Chatbots com IA', price: 3999, description: 'Atendimento automatizado inteligente' },
+    'business-intelligence': { name: 'Business Intelligence', price: 9999, description: 'Análise de dados para decisões estratégicas' },
+    'marketing-digital': { name: 'Marketing Digital', price: 1999, description: 'Estratégias digitais para crescimento' },
+    'marketplace': { name: 'Marketplace', price: 15999, description: 'Plataformas de vendas online' },
+    'consultoria-ti': { name: 'Consultoria em TI', price: 2999, description: 'Consultoria especializada em tecnologia' },
+    'integracao-sistemas': { name: 'Integração de Sistemas', price: 5999, description: 'Conecte todos os seus sistemas' },
+    'seguranca-digital': { name: 'Segurança Digital', price: 3499, description: 'Proteção completa para seu negócio digital' }
+  };
+
   useEffect(() => {
     loadPageData();
-  }, [location.pathname]);
+  }, [location.pathname, params]);
 
   const loadPageData = async () => {
     try {
       console.log('Loading page data for:', location.pathname);
+      console.log('Params:', params);
       
-      const url = location.pathname;
-      let serviceName = '';
-      let citySlug = '';
-      let cityName = '';
-
-      // Detectar serviço e cidade baseado na URL
-      if (url.includes('/ecommerce-')) {
-        serviceName = 'E-commerce';
-        citySlug = url.replace('/ecommerce-', '');
-      } else if (url.includes('/landing-page-')) {
-        serviceName = 'Landing Page';
-        citySlug = url.replace('/landing-page-', '');
-      } else if (url.includes('/leadpilot-')) {
-        serviceName = 'LeadPilot';
-        citySlug = url.replace('/leadpilot-', '');
-      } else if (url.includes('/seo-')) {
-        serviceName = 'SEO';
-        citySlug = url.replace('/seo-', '');
-      } else if (url.includes('/aplicativo-')) {
-        serviceName = 'Aplicativo Mobile';
-        citySlug = url.replace('/aplicativo-', '');
-      } else if (url.includes('/sistema-ia-')) {
-        serviceName = 'Sistema com IA';
-        citySlug = url.replace('/sistema-ia-', '');
-      } else if (url.includes('/sites-institucionais-')) {
-        serviceName = 'Sites Institucionais';
-        citySlug = url.replace('/sites-institucionais-', '');
-      } else if (url.includes('/automacao-rpa-')) {
-        serviceName = 'Automação RPA';
-        citySlug = url.replace('/automacao-rpa-', '');
-      } else if (url.includes('/chatbots-ia-')) {
-        serviceName = 'Chatbots com IA';
-        citySlug = url.replace('/chatbots-ia-', '');
-      } else if (url.includes('/business-intelligence-')) {
-        serviceName = 'Business Intelligence';
-        citySlug = url.replace('/business-intelligence-', '');
-      } else if (url.includes('/marketing-digital-')) {
-        serviceName = 'Marketing Digital';
-        citySlug = url.replace('/marketing-digital-', '');
-      } else if (url.includes('/marketplace-')) {
-        serviceName = 'Marketplace';
-        citySlug = url.replace('/marketplace-', '');
-      } else if (url.includes('/consultoria-ti-')) {
-        serviceName = 'Consultoria em TI';
-        citySlug = url.replace('/consultoria-ti-', '');
-      } else if (url.includes('/integracao-sistemas-')) {
-        serviceName = 'Integração de Sistemas';
-        citySlug = url.replace('/integracao-sistemas-', '');
-      } else if (url.includes('/seguranca-digital-')) {
-        serviceName = 'Segurança Digital';
-        citySlug = url.replace('/seguranca-digital-', '');
+      // Extrair serviço e cidade da URL usando os parâmetros do React Router
+      const { service: serviceParam, city: cityParam } = params;
+      
+      if (!serviceParam || !cityParam) {
+        console.error('Service or city parameter missing');
+        setLoading(false);
+        return;
       }
 
-      console.log('Service detected:', serviceName);
-      console.log('City slug detected:', citySlug);
+      console.log('Service param:', serviceParam);
+      console.log('City param:', cityParam);
+
+      // Buscar dados do serviço
+      const serviceData = serviceMap[serviceParam as keyof typeof serviceMap];
+      
+      if (!serviceData) {
+        console.error('Service not found:', serviceParam);
+        setLoading(false);
+        return;
+      }
 
       // Converter slug da cidade para nome legível
-      cityName = slugToCity(citySlug);
+      const cityName = slugToCity(cityParam);
       
+      console.log('Service found:', serviceData.name);
       console.log('City name converted:', cityName);
 
       // Criar dados para a página
       const mockService = {
-        name: serviceName,
-        slug: serviceName.toLowerCase().replace(/\s+/g, '-'),
-        base_price: getServicePrice(serviceName),
-        description: getServiceDescription(serviceName)
+        name: serviceData.name,
+        slug: serviceParam,
+        base_price: serviceData.price,
+        description: serviceData.description
       };
 
       const mockCity = {
         name: cityName,
-        slug: citySlug,
+        slug: cityParam,
         states: { name: 'Brasil', code: 'BR' }
       };
 
       const mockContent = {
-        title: `${serviceName} em ${cityName} - PPlace`,
-        description: `${serviceName} profissional em ${cityName}. A PPlace oferece soluções completas em tecnologia com IA avançada para empresas de ${cityName}.`,
-        meta_keywords: `${serviceName.toLowerCase()}, ${cityName.toLowerCase()}, desenvolvimento, IA, PPlace`,
-        content: generateContent(serviceName, cityName)
+        title: `${serviceData.name} em ${cityName} - PPlace`,
+        description: `${serviceData.name} profissional em ${cityName}. A PPlace oferece soluções completas em tecnologia com IA avançada para empresas de ${cityName}.`,
+        meta_keywords: `${serviceData.name.toLowerCase()}, ${cityName.toLowerCase()}, desenvolvimento, IA, PPlace`,
+        content: generateContent(serviceData.name, cityName)
       };
 
       setPageData({
@@ -118,48 +104,6 @@ const DynamicServiceCityPage = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getServicePrice = (serviceName: string) => {
-    const prices: { [key: string]: number } = {
-      'E-commerce': 2999,
-      'Landing Page': 899,
-      'LeadPilot': 4999,
-      'SEO': 799,
-      'Aplicativo Mobile': 8999,
-      'Sistema com IA': 12999,
-      'Sites Institucionais': 1499,
-      'Automação RPA': 7999,
-      'Chatbots com IA': 3999,
-      'Business Intelligence': 9999,
-      'Marketing Digital': 1999,
-      'Marketplace': 15999,
-      'Consultoria em TI': 2999,
-      'Integração de Sistemas': 5999,
-      'Segurança Digital': 3499
-    };
-    return prices[serviceName] || 2999;
-  };
-
-  const getServiceDescription = (serviceName: string) => {
-    const descriptions: { [key: string]: string } = {
-      'E-commerce': 'Lojas virtuais profissionais que vendem 24/7',
-      'Landing Page': 'Páginas de conversão de alta performance',
-      'LeadPilot': 'Sistema de IA que multiplica suas vendas',
-      'SEO': 'Otimização para aparecer no Google',
-      'Aplicativo Mobile': 'Apps nativos para Android e iOS',
-      'Sistema com IA': 'Soluções personalizadas com inteligência artificial',
-      'Sites Institucionais': 'Sites profissionais para sua empresa',
-      'Automação RPA': 'Automatização de processos empresariais',
-      'Chatbots com IA': 'Atendimento automatizado inteligente',
-      'Business Intelligence': 'Análise de dados para decisões estratégicas',
-      'Marketing Digital': 'Estratégias digitais para crescimento',
-      'Marketplace': 'Plataformas de vendas online',
-      'Consultoria em TI': 'Consultoria especializada em tecnologia',
-      'Integração de Sistemas': 'Conecte todos os seus sistemas',
-      'Segurança Digital': 'Proteção completa para seu negócio digital'
-    };
-    return descriptions[serviceName] || 'Soluções tecnológicas inovadoras';
   };
 
   const generateContent = (serviceName: string, cityName: string) => {
