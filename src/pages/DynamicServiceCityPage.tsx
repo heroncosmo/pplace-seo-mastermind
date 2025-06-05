@@ -41,28 +41,57 @@ const DynamicServiceCityPage = () => {
 
   const loadPageData = async () => {
     try {
-      console.log('=== DEBUG INICIO ===');
+      console.log('=== DEBUG DINÂMICO INÍCIO ===');
       console.log('URL atual:', location.pathname);
       console.log('Params recebidos:', params);
       
-      // Extrair serviço e cidade da URL atual
-      const pathParts = location.pathname.split('/')[1]; // Remove a primeira barra
-      console.log('Path completo:', pathParts);
+      // Obter o parâmetro city diretamente do useParams
+      const cityParam = params.city;
+      console.log('City param:', cityParam);
       
-      // Encontrar onde está o último hífen para separar serviço de cidade
-      const lastHyphenIndex = pathParts.lastIndexOf('-');
-      
-      if (lastHyphenIndex === -1) {
-        console.error('Formato de URL inválido - não encontrou hífen');
+      if (!cityParam) {
+        console.error('Parâmetro city não encontrado');
         setLoading(false);
         return;
       }
+
+      // Determinar o serviço baseado na rota atual
+      let serviceSlug = '';
+      const pathname = location.pathname;
       
-      const serviceSlug = pathParts.substring(0, lastHyphenIndex);
-      const citySlug = pathParts.substring(lastHyphenIndex + 1);
+      if (pathname.includes('/ecommerce-')) {
+        serviceSlug = 'ecommerce';
+      } else if (pathname.includes('/landing-page-')) {
+        serviceSlug = 'landing-page';
+      } else if (pathname.includes('/leadpilot-')) {
+        serviceSlug = 'leadpilot';
+      } else if (pathname.includes('/seo-')) {
+        serviceSlug = 'seo';
+      } else if (pathname.includes('/aplicativo-')) {
+        serviceSlug = 'aplicativo';
+      } else if (pathname.includes('/sistema-ia-')) {
+        serviceSlug = 'sistema-ia';
+      } else if (pathname.includes('/sites-institucionais-')) {
+        serviceSlug = 'sites-institucionais';
+      } else if (pathname.includes('/automacao-rpa-')) {
+        serviceSlug = 'automacao-rpa';
+      } else if (pathname.includes('/chatbots-ia-')) {
+        serviceSlug = 'chatbots-ia';
+      } else if (pathname.includes('/business-intelligence-')) {
+        serviceSlug = 'business-intelligence';
+      } else if (pathname.includes('/marketing-digital-')) {
+        serviceSlug = 'marketing-digital';
+      } else if (pathname.includes('/marketplace-')) {
+        serviceSlug = 'marketplace';
+      } else if (pathname.includes('/consultoria-ti-')) {
+        serviceSlug = 'consultoria-ti';
+      } else if (pathname.includes('/integracao-sistemas-')) {
+        serviceSlug = 'integracao-sistemas';
+      } else if (pathname.includes('/seguranca-digital-')) {
+        serviceSlug = 'seguranca-digital';
+      }
       
-      console.log('Serviço extraído:', serviceSlug);
-      console.log('Cidade extraída:', citySlug);
+      console.log('Serviço determinado:', serviceSlug);
 
       // Verificar se o serviço existe
       const serviceData = serviceMap[serviceSlug as keyof typeof serviceMap];
@@ -75,7 +104,7 @@ const DynamicServiceCityPage = () => {
       }
 
       // Converter slug da cidade para nome legível
-      const cityName = slugToCity(citySlug);
+      const cityName = slugToCity(cityParam);
       
       console.log('Serviço encontrado:', serviceData.name);
       console.log('Nome da cidade convertido:', cityName);
@@ -90,7 +119,7 @@ const DynamicServiceCityPage = () => {
 
       const mockCity = {
         name: cityName,
-        slug: citySlug,
+        slug: cityParam,
         states: { name: 'Brasil', code: 'BR' }
       };
 
@@ -158,7 +187,8 @@ const DynamicServiceCityPage = () => {
           <h1 className="text-4xl font-bold text-gray-900 mb-6">Página não encontrada</h1>
           <p className="text-xl text-gray-600 mb-4">O serviço ou cidade solicitada não foi encontrada.</p>
           <p className="text-gray-500">URL: {location.pathname}</p>
-          <p className="text-sm text-gray-400 mt-4">Debug: Verifique o console para mais detalhes</p>
+          <p className="text-sm text-gray-400 mt-4">Params: {JSON.stringify(params)}</p>
+          <p className="text-sm text-gray-400 mt-2">Debug: Verifique o console para mais detalhes</p>
         </div>
         <Footer />
       </div>

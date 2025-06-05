@@ -30,6 +30,11 @@ const SEOCityServiceLinks = () => {
     return null;
   }
 
+  // Log para debug
+  console.log('=== SEO CITY SERVICE LINKS DEBUG ===');
+  console.log('Cidades carregadas:', cities.length);
+  console.log('Primeira cidade:', cities[0]);
+
   return (
     <div className="bg-gray-50 py-12">
       <div className="container mx-auto px-4">
@@ -56,6 +61,7 @@ const SEOCityServiceLinks = () => {
               
               {stateCities.slice(0, 8).map((city: any) => {
                 const citySlug = cityToSlug(city.name);
+                console.log(`Link gerado: /criacao-de-site-${citySlug} para cidade: ${city.name}`);
                 return (
                   <div key={city.id} className="mb-4">
                     <h4 className="font-semibold text-gray-800 mb-2">{city.name}</h4>
@@ -64,20 +70,26 @@ const SEOCityServiceLinks = () => {
                       <Link 
                         to={`/criacao-de-site-${citySlug}`}
                         className="text-blue-600 hover:text-blue-800 hover:underline"
+                        onClick={() => console.log(`Clicou em: /criacao-de-site-${citySlug}`)}
                       >
                         Sites em {city.name}
                       </Link>
                       
                       {/* Links dos principais serviços */}
-                      {serviceRoutes.slice(0, 7).map((service) => (
-                        <Link 
-                          key={service.slug}
-                          to={`/${service.slug}-${citySlug}`}
-                          className="text-gray-600 hover:text-purple-600 hover:underline"
-                        >
-                          {service.name}
-                        </Link>
-                      ))}
+                      {serviceRoutes.slice(0, 7).map((service) => {
+                        const serviceLink = `/${service.slug}-${citySlug}`;
+                        console.log(`Link de serviço gerado: ${serviceLink} para ${service.name} em ${city.name}`);
+                        return (
+                          <Link 
+                            key={service.slug}
+                            to={serviceLink}
+                            className="text-gray-600 hover:text-purple-600 hover:underline"
+                            onClick={() => console.log(`Clicou em: ${serviceLink}`)}
+                          >
+                            {service.name}
+                          </Link>
+                        );
+                      })}
                     </div>
                   </div>
                 );
@@ -103,15 +115,19 @@ const SEOCityServiceLinks = () => {
               return (
                 <div key={city.id} className="space-y-1">
                   <h4 className="font-semibold text-gray-700 mb-1">{city.name}</h4>
-                  {serviceRoutes.map((service) => (
-                    <Link 
-                      key={`${service.slug}-${city.id}`}
-                      to={`/${service.slug}-${citySlug}`}
-                      className="block text-gray-500 hover:text-purple-600 hover:underline"
-                    >
-                      {service.name}
-                    </Link>
-                  ))}
+                  {serviceRoutes.map((service) => {
+                    const serviceLink = `/${service.slug}-${citySlug}`;
+                    return (
+                      <Link 
+                        key={`${service.slug}-${city.id}`}
+                        to={serviceLink}
+                        className="block text-gray-500 hover:text-purple-600 hover:underline"
+                        onClick={() => console.log(`Clicou em link completo: ${serviceLink}`)}
+                      >
+                        {service.name}
+                      </Link>
+                    );
+                  })}
                 </div>
               );
             })}
