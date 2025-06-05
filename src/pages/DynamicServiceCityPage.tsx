@@ -41,47 +41,56 @@ const DynamicServiceCityPage = () => {
 
   const loadPageData = async () => {
     try {
-      console.log('Loading page data for:', location.pathname);
-      console.log('Params:', params);
+      console.log('=== DEBUG INICIO ===');
+      console.log('URL atual:', location.pathname);
+      console.log('Params recebidos:', params);
       
-      // Extrair serviço e cidade da URL usando os parâmetros do React Router
-      const { service: serviceParam, city: cityParam } = params;
+      // Extrair serviço e cidade da URL atual
+      const pathParts = location.pathname.split('/')[1]; // Remove a primeira barra
+      console.log('Path completo:', pathParts);
       
-      if (!serviceParam || !cityParam) {
-        console.error('Service or city parameter missing');
+      // Encontrar onde está o último hífen para separar serviço de cidade
+      const lastHyphenIndex = pathParts.lastIndexOf('-');
+      
+      if (lastHyphenIndex === -1) {
+        console.error('Formato de URL inválido - não encontrou hífen');
         setLoading(false);
         return;
       }
+      
+      const serviceSlug = pathParts.substring(0, lastHyphenIndex);
+      const citySlug = pathParts.substring(lastHyphenIndex + 1);
+      
+      console.log('Serviço extraído:', serviceSlug);
+      console.log('Cidade extraída:', citySlug);
 
-      console.log('Service param:', serviceParam);
-      console.log('City param:', cityParam);
-
-      // Buscar dados do serviço
-      const serviceData = serviceMap[serviceParam as keyof typeof serviceMap];
+      // Verificar se o serviço existe
+      const serviceData = serviceMap[serviceSlug as keyof typeof serviceMap];
       
       if (!serviceData) {
-        console.error('Service not found:', serviceParam);
+        console.error('Serviço não encontrado:', serviceSlug);
+        console.log('Serviços disponíveis:', Object.keys(serviceMap));
         setLoading(false);
         return;
       }
 
       // Converter slug da cidade para nome legível
-      const cityName = slugToCity(cityParam);
+      const cityName = slugToCity(citySlug);
       
-      console.log('Service found:', serviceData.name);
-      console.log('City name converted:', cityName);
+      console.log('Serviço encontrado:', serviceData.name);
+      console.log('Nome da cidade convertido:', cityName);
 
       // Criar dados para a página
       const mockService = {
         name: serviceData.name,
-        slug: serviceParam,
+        slug: serviceSlug,
         base_price: serviceData.price,
         description: serviceData.description
       };
 
       const mockCity = {
         name: cityName,
-        slug: cityParam,
+        slug: citySlug,
         states: { name: 'Brasil', code: 'BR' }
       };
 
@@ -98,7 +107,9 @@ const DynamicServiceCityPage = () => {
         content: mockContent
       });
 
-      console.log('Page data loaded successfully');
+      console.log('=== DADOS CARREGADOS COM SUCESSO ===');
+      console.log('Service:', mockService);
+      console.log('City:', mockCity);
     } catch (error) {
       console.error('Erro ao carregar dados da página:', error);
     } finally {
@@ -147,6 +158,7 @@ const DynamicServiceCityPage = () => {
           <h1 className="text-4xl font-bold text-gray-900 mb-6">Página não encontrada</h1>
           <p className="text-xl text-gray-600 mb-4">O serviço ou cidade solicitada não foi encontrada.</p>
           <p className="text-gray-500">URL: {location.pathname}</p>
+          <p className="text-sm text-gray-400 mt-4">Debug: Verifique o console para mais detalhes</p>
         </div>
         <Footer />
       </div>
