@@ -41,66 +41,46 @@ const DynamicServiceCityPage = () => {
 
   const loadPageData = async () => {
     try {
-      console.log('=== DEBUG DINÂMICO SIMPLIFICADO ===');
-      console.log('URL atual:', location.pathname);
-      console.log('Params recebidos:', params);
+      console.log('=== NOVA LÓGICA CORRIGIDA ===');
+      console.log('URL completa:', location.pathname);
+      console.log('Params do React Router:', params);
       
-      // Extrair cidade do parâmetro
+      // Extrair cidade do parâmetro do React Router
       const citySlug = params.city;
-      console.log('City slug extraído:', citySlug);
+      console.log('City slug do parâmetro:', citySlug);
       
       if (!citySlug) {
-        console.error('Parâmetro city não encontrado');
+        console.error('❌ Parâmetro city não encontrado');
         setLoading(false);
         return;
       }
 
-      // Extrair serviço da URL - método simplificado
+      // Extrair serviço da URL - método SIMPLIFICADO
       const pathname = location.pathname;
-      console.log('Pathname completo:', pathname);
+      console.log('Pathname:', pathname);
       
-      // Remover a barra inicial e separar por hífen
-      const pathWithoutSlash = pathname.substring(1); // Remove /
-      console.log('Path sem barra:', pathWithoutSlash);
-      
-      // Encontrar o serviço comparando com as chaves do serviceMap
-      let serviceSlug = '';
-      const serviceKeys = Object.keys(serviceMap);
-      
-      for (const key of serviceKeys) {
-        const expectedPath = `${key}-${citySlug}`;
-        console.log(`Comparando: "${pathWithoutSlash}" com "${expectedPath}"`);
-        
-        if (pathWithoutSlash === expectedPath) {
-          serviceSlug = key;
-          console.log(`✅ MATCH encontrado! Serviço: ${key}`);
-          break;
-        }
+      // Formato esperado: /servico-cidade
+      // Exemplo: /ecommerce-sao-jose -> serviço = "ecommerce"
+      const segments = pathname.split('/').filter(Boolean); // Remove vazios
+      if (segments.length === 0) {
+        console.error('❌ URL inválida');
+        setLoading(false);
+        return;
       }
       
-      if (!serviceSlug) {
-        console.error('❌ Serviço não encontrado na URL:', pathWithoutSlash);
-        console.log('Serviços disponíveis:', serviceKeys);
-        
-        // Tentar método alternativo - pegar tudo antes do último hífen
-        const lastHyphenIndex = pathWithoutSlash.lastIndexOf('-');
-        if (lastHyphenIndex > 0) {
-          const potentialService = pathWithoutSlash.substring(0, lastHyphenIndex);
-          console.log('Tentativa alternativa - serviço potencial:', potentialService);
-          
-          if (serviceMap[potentialService as keyof typeof serviceMap]) {
-            serviceSlug = potentialService;
-            console.log(`✅ MATCH alternativo encontrado! Serviço: ${potentialService}`);
-          }
-        }
-      }
-
+      const fullSlug = segments[0]; // Pega o primeiro segmento
+      console.log('Slug completo:', fullSlug);
+      
+      // Extrair serviço removendo a cidade do final
+      const serviceSlug = fullSlug.replace(`-${citySlug}`, '');
+      console.log('Serviço extraído:', serviceSlug);
+      
       // Verificar se o serviço existe
       const serviceData = serviceMap[serviceSlug as keyof typeof serviceMap];
       
       if (!serviceData) {
-        console.error('❌ Serviço não encontrado no mapeamento:', serviceSlug);
-        console.log('Mapeamento completo:', Object.keys(serviceMap));
+        console.error('❌ Serviço não encontrado:', serviceSlug);
+        console.log('Serviços disponíveis:', Object.keys(serviceMap));
         setLoading(false);
         return;
       }
@@ -108,11 +88,9 @@ const DynamicServiceCityPage = () => {
       // Converter slug da cidade para nome legível
       const cityName = slugToCity(citySlug);
       
-      console.log('✅ Dados finais:');
-      console.log('- Serviço encontrado:', serviceData.name);
-      console.log('- Slug do serviço:', serviceSlug);
-      console.log('- Nome da cidade:', cityName);
-      console.log('- Slug da cidade:', citySlug);
+      console.log('✅ SUCESSO!');
+      console.log('- Serviço:', serviceData.name);
+      console.log('- Cidade:', cityName);
 
       // Criar dados para a página
       const mockService = {
@@ -151,32 +129,47 @@ const DynamicServiceCityPage = () => {
 
   const generateContent = (serviceName: string, cityName: string) => {
     return `
-      <div class="space-y-6">
-        <h2 class="text-3xl font-bold text-gray-900">Por que escolher ${serviceName} da PPlace em ${cityName}?</h2>
-        <p class="text-lg text-gray-700">
+      <div class="space-y-8">
+        <h2 class="text-4xl font-bold text-gray-900 mb-6">Por que escolher ${serviceName} da PPlace em ${cityName}?</h2>
+        <p class="text-xl text-gray-700 leading-relaxed">
           A PPlace é líder em ${serviceName.toLowerCase()} em ${cityName}, oferecendo soluções inovadoras 
           que transformam negócios e multiplicam resultados. Nossa expertise em tecnologia e IA garante 
           que sua empresa em ${cityName} tenha as melhores ferramentas do mercado.
         </p>
         
-        <h3 class="text-2xl font-bold text-purple-600">Vantagens exclusivas em ${cityName}:</h3>
-        <ul class="list-disc list-inside space-y-2 text-gray-700">
-          <li>Atendimento personalizado para o mercado de ${cityName}</li>
-          <li>Tecnologia de ponta com inteligência artificial</li>
-          <li>Suporte local especializado 24/7</li>
-          <li>Resultados comprovados em ${cityName}</li>
-          <li>Preços competitivos para a região</li>
-        </ul>
+        <h3 class="text-3xl font-bold text-purple-600 mt-12 mb-6">Vantagens exclusivas em ${cityName}:</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg border border-purple-200">
+            <h4 class="font-bold text-purple-700 mb-2">🎯 Atendimento Personalizado</h4>
+            <p class="text-gray-700">Atendimento especializado para o mercado de ${cityName}</p>
+          </div>
+          <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
+            <h4 class="font-bold text-blue-700 mb-2">🤖 Tecnologia de Ponta</h4>
+            <p class="text-gray-700">Inteligência artificial de última geração</p>
+          </div>
+          <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-lg border border-green-200">
+            <h4 class="font-bold text-green-700 mb-2">📈 Resultados Comprovados</h4>
+            <p class="text-gray-700">Resultados comprovados em ${cityName}</p>
+          </div>
+          <div class="bg-gradient-to-r from-orange-50 to-yellow-50 p-6 rounded-lg border border-orange-200">
+            <h4 class="font-bold text-orange-700 mb-2">💰 Preços Competitivos</h4>
+            <p class="text-gray-700">Preços especiais para a região</p>
+          </div>
+        </div>
       </div>
     `;
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Carregando conteúdo otimizado...</p>
+          <div className="relative">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-4 border-purple-600 mx-auto"></div>
+            <div className="absolute inset-0 rounded-full h-32 w-32 border-r-4 border-blue-400 animate-spin" style={{animationDirection: 'reverse', animationDuration: '1.5s'}}></div>
+          </div>
+          <p className="mt-6 text-xl text-gray-700 font-medium">Carregando experiência otimizada...</p>
+          <p className="mt-2 text-gray-500">Preparando o melhor para você</p>
         </div>
       </div>
     );
@@ -184,15 +177,20 @@ const DynamicServiceCityPage = () => {
 
   if (!pageData || !pageData.service.name) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
         <Header />
         <div className="container mx-auto px-4 py-20 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-6">Página não encontrada</h1>
-          <p className="text-xl text-gray-600 mb-4">O serviço ou cidade solicitada não foi encontrada.</p>
-          <p className="text-gray-500 mb-2">URL: {location.pathname}</p>
-          <p className="text-sm text-gray-400 mb-2">Params: {JSON.stringify(params)}</p>
-          <p className="text-sm text-gray-400 mb-4">Serviços disponíveis: {Object.keys(serviceMap).join(', ')}</p>
-          <p className="text-sm text-gray-400">⚠️ Verifique o console do navegador para logs detalhados</p>
+          <div className="max-w-2xl mx-auto">
+            <div className="text-8xl mb-6">🚫</div>
+            <h1 className="text-5xl font-bold text-gray-900 mb-6">Página não encontrada</h1>
+            <p className="text-xl text-gray-600 mb-6">O serviço ou cidade solicitada não foi encontrada.</p>
+            <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 text-left space-y-2 text-sm">
+              <p><strong>URL:</strong> {location.pathname}</p>
+              <p><strong>Params:</strong> {JSON.stringify(params)}</p>
+              <p><strong>Serviços disponíveis:</strong> {Object.keys(serviceMap).join(', ')}</p>
+              <p className="text-orange-600">⚠️ Verifique o console do navegador para logs detalhados</p>
+            </div>
+          </div>
         </div>
         <Footer />
       </div>
@@ -202,7 +200,7 @@ const DynamicServiceCityPage = () => {
   const { service, city, content } = pageData;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50">
       <SEO 
         title={content.title}
         description={content.description}
