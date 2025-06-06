@@ -41,12 +41,11 @@ const DynamicServiceCityPage = () => {
 
   const loadPageData = async () => {
     try {
-      console.log('=== DEBUG DINÂMICO INÍCIO ===');
+      console.log('=== DEBUG DINÂMICO SIMPLIFICADO ===');
       console.log('URL atual:', location.pathname);
       console.log('Params recebidos:', params);
       
-      // A URL tem o formato: /servico-cidade
-      // O parâmetro city contém o slug da cidade
+      // Extrair cidade do parâmetro
       const citySlug = params.city;
       console.log('City slug extraído:', citySlug);
       
@@ -56,32 +55,52 @@ const DynamicServiceCityPage = () => {
         return;
       }
 
-      // Extrair o serviço do pathname
-      // Exemplo: /ecommerce-sao-paulo -> serviceSlug = 'ecommerce'
-      const pathSegments = location.pathname.split('/')[1]; // Remove a primeira barra
-      console.log('Path segments:', pathSegments);
+      // Extrair serviço da URL - método simplificado
+      const pathname = location.pathname;
+      console.log('Pathname completo:', pathname);
       
-      // Encontrar onde termina o serviço e onde começa a cidade
+      // Remover a barra inicial e separar por hífen
+      const pathWithoutSlash = pathname.substring(1); // Remove /
+      console.log('Path sem barra:', pathWithoutSlash);
+      
+      // Encontrar o serviço comparando com as chaves do serviceMap
       let serviceSlug = '';
-      
-      // Iterar pelos serviços para encontrar qual coincide com o início da URL
       const serviceKeys = Object.keys(serviceMap);
+      
       for (const key of serviceKeys) {
-        if (pathSegments.startsWith(key + '-')) {
+        const expectedPath = `${key}-${citySlug}`;
+        console.log(`Comparando: "${pathWithoutSlash}" com "${expectedPath}"`);
+        
+        if (pathWithoutSlash === expectedPath) {
           serviceSlug = key;
+          console.log(`✅ MATCH encontrado! Serviço: ${key}`);
           break;
         }
       }
       
-      console.log('Serviço determinado:', serviceSlug);
+      if (!serviceSlug) {
+        console.error('❌ Serviço não encontrado na URL:', pathWithoutSlash);
+        console.log('Serviços disponíveis:', serviceKeys);
+        
+        // Tentar método alternativo - pegar tudo antes do último hífen
+        const lastHyphenIndex = pathWithoutSlash.lastIndexOf('-');
+        if (lastHyphenIndex > 0) {
+          const potentialService = pathWithoutSlash.substring(0, lastHyphenIndex);
+          console.log('Tentativa alternativa - serviço potencial:', potentialService);
+          
+          if (serviceMap[potentialService as keyof typeof serviceMap]) {
+            serviceSlug = potentialService;
+            console.log(`✅ MATCH alternativo encontrado! Serviço: ${potentialService}`);
+          }
+        }
+      }
 
       // Verificar se o serviço existe
       const serviceData = serviceMap[serviceSlug as keyof typeof serviceMap];
       
       if (!serviceData) {
-        console.error('Serviço não encontrado:', serviceSlug);
-        console.log('Serviços disponíveis:', Object.keys(serviceMap));
-        console.log('Path completo para análise:', location.pathname);
+        console.error('❌ Serviço não encontrado no mapeamento:', serviceSlug);
+        console.log('Mapeamento completo:', Object.keys(serviceMap));
         setLoading(false);
         return;
       }
@@ -89,8 +108,11 @@ const DynamicServiceCityPage = () => {
       // Converter slug da cidade para nome legível
       const cityName = slugToCity(citySlug);
       
-      console.log('Serviço encontrado:', serviceData.name);
-      console.log('Nome da cidade convertido:', cityName);
+      console.log('✅ Dados finais:');
+      console.log('- Serviço encontrado:', serviceData.name);
+      console.log('- Slug do serviço:', serviceSlug);
+      console.log('- Nome da cidade:', cityName);
+      console.log('- Slug da cidade:', citySlug);
 
       // Criar dados para a página
       const mockService = {
@@ -119,11 +141,9 @@ const DynamicServiceCityPage = () => {
         content: mockContent
       });
 
-      console.log('=== DADOS CARREGADOS COM SUCESSO ===');
-      console.log('Service:', mockService);
-      console.log('City:', mockCity);
+      console.log('✅ PÁGINA CARREGADA COM SUCESSO!');
     } catch (error) {
-      console.error('Erro ao carregar dados da página:', error);
+      console.error('❌ Erro ao carregar dados da página:', error);
     } finally {
       setLoading(false);
     }
@@ -169,9 +189,10 @@ const DynamicServiceCityPage = () => {
         <div className="container mx-auto px-4 py-20 text-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-6">Página não encontrada</h1>
           <p className="text-xl text-gray-600 mb-4">O serviço ou cidade solicitada não foi encontrada.</p>
-          <p className="text-gray-500">URL: {location.pathname}</p>
-          <p className="text-sm text-gray-400 mt-4">Params: {JSON.stringify(params)}</p>
-          <p className="text-sm text-gray-400 mt-2">Debug: Verifique o console para mais detalhes</p>
+          <p className="text-gray-500 mb-2">URL: {location.pathname}</p>
+          <p className="text-sm text-gray-400 mb-2">Params: {JSON.stringify(params)}</p>
+          <p className="text-sm text-gray-400 mb-4">Serviços disponíveis: {Object.keys(serviceMap).join(', ')}</p>
+          <p className="text-sm text-gray-400">⚠️ Verifique o console do navegador para logs detalhados</p>
         </div>
         <Footer />
       </div>

@@ -27,13 +27,15 @@ const SEOCityServiceLinks = () => {
   ];
 
   if (!cities || !cities.length) {
+    console.log('⚠️ Nenhuma cidade carregada ainda');
     return null;
   }
 
-  // Log para debug
-  console.log('=== SEO CITY SERVICE LINKS DEBUG ===');
-  console.log('Cidades carregadas:', cities.length);
-  console.log('Primeira cidade:', cities[0]);
+  // Log de debug melhorado
+  console.log('=== SEO LINKS DEBUG (CORRIGIDO) ===');
+  console.log('✅ Cidades carregadas:', cities.length);
+  console.log('✅ Primeira cidade exemplo:', cities[0]);
+  console.log('✅ Serviços configurados:', serviceRoutes.length);
 
   return (
     <div className="bg-gray-50 py-12">
@@ -62,8 +64,10 @@ const SEOCityServiceLinks = () => {
               {stateCities.slice(0, 8).map((city: any) => {
                 const citySlug = cityToSlug(city.name);
                 const mainCityLink = `/criacao-de-site-${citySlug}`;
-                console.log(`=== TESTANDO LINKS PARA ${city.name} ===`);
-                console.log(`Link principal: ${mainCityLink}`);
+                
+                // Debug melhorado
+                console.log(`🔗 TESTANDO LINKS PARA ${city.name}:`);
+                console.log(`   └─ Link principal: ${mainCityLink}`);
                 
                 return (
                   <div key={city.id} className="mb-4">
@@ -73,7 +77,7 @@ const SEOCityServiceLinks = () => {
                       <Link 
                         to={mainCityLink}
                         className="text-blue-600 hover:text-blue-800 hover:underline"
-                        onClick={() => console.log(`Clicou em: ${mainCityLink}`)}
+                        onClick={() => console.log(`🖱️ Clicou em: ${mainCityLink}`)}
                       >
                         Sites em {city.name}
                       </Link>
@@ -81,14 +85,16 @@ const SEOCityServiceLinks = () => {
                       {/* Links dos principais serviços */}
                       {serviceRoutes.slice(0, 7).map((service) => {
                         const serviceLink = `/${service.slug}-${citySlug}`;
-                        console.log(`Link de serviço: ${serviceLink} (${service.name} em ${city.name})`);
+                        
+                        // Debug para cada link de serviço
+                        console.log(`   └─ ${service.name}: ${serviceLink}`);
                         
                         return (
                           <Link 
                             key={service.slug}
                             to={serviceLink}
                             className="text-gray-600 hover:text-purple-600 hover:underline"
-                            onClick={() => console.log(`Clicou em serviço: ${serviceLink}`)}
+                            onClick={() => console.log(`🖱️ Clicou em serviço: ${serviceLink} (${service.name} em ${city.name})`)}
                           >
                             {service.name}
                           </Link>
@@ -114,8 +120,10 @@ const SEOCityServiceLinks = () => {
             Todos os Nossos Serviços por Cidade
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 text-xs">
-            {cities.map((city: any) => {
+            {cities.slice(0, 20).map((city: any) => {
               const citySlug = cityToSlug(city.name);
+              console.log(`📋 Gerando links completos para: ${city.name} (${citySlug})`);
+              
               return (
                 <div key={city.id} className="space-y-1">
                   <h4 className="font-semibold text-gray-700 mb-1">{city.name}</h4>
@@ -126,7 +134,7 @@ const SEOCityServiceLinks = () => {
                         key={`${service.slug}-${city.id}`}
                         to={serviceLink}
                         className="block text-gray-500 hover:text-purple-600 hover:underline"
-                        onClick={() => console.log(`Clicou em link completo: ${serviceLink}`)}
+                        onClick={() => console.log(`🖱️ Clicou em link completo: ${serviceLink}`)}
                       >
                         {service.name}
                       </Link>
