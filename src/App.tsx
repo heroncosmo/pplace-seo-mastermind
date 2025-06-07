@@ -17,6 +17,11 @@ const ServiceCityPage = lazy(() => import("./pages/ServiceCityPage"));
 const DynamicServiceCityPage = lazy(() => import("./pages/DynamicServiceCityPage"));
 const BlogPage = lazy(() => import("./pages/BlogPage"));
 const BlogPostPage = lazy(() => import("./pages/BlogPostPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const ServicesPage = lazy(() => import("./pages/ServicesPage"));
+const LeadPilotPage = lazy(() => import("./pages/LeadPilotPage"));
+const PortfolioPage = lazy(() => import("./pages/PortfolioPage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Loading component melhorado
@@ -45,6 +50,11 @@ const App = () => (
               <Route path="/mapa-cidades" element={<CityMapPage />} />
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/blog/:slug" element={<BlogPostPage />} />
+              <Route path="/contato" element={<ContactPage />} />
+              <Route path="/servicos" element={<ServicesPage />} />
+              <Route path="/leadpilot" element={<LeadPilotPage />} />
+              <Route path="/portfolio" element={<PortfolioPage />} />
+              <Route path="/sobre" element={<AboutPage />} />
               
               {/* Rota específica para criação de sites por cidade */}
               <Route path="/criacao-de-site-:city" element={<DynamicServiceCityPage />} />
