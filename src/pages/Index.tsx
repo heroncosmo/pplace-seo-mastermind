@@ -77,7 +77,7 @@ const Index = () => {
             {/* Ultimate Success Badge */}
             <div className="inline-flex items-center px-12 py-6 rounded-full bg-gradient-to-r from-yellow-500/30 to-orange-500/30 backdrop-blur-sm border-2 border-yellow-400/50 mb-12 transform hover:scale-105 transition-all duration-300">
               <span className="text-yellow-300 mr-4 text-5xl animate-bounce">👑</span>
-              <span className="text-2xl font-black text-white">ÚLTIMAS 7 VAGAS DE DEZEMBRO</span>
+              <span className="text-2xl font-black text-white">SUAS VENDAS NUNCA MAIS SERÃO AS MESMAS</span>
             </div>
 
             <h2 className="text-5xl lg:text-7xl font-black text-white mb-8 leading-tight">
@@ -133,11 +133,12 @@ const Index = () => {
             <div className="p-12 bg-gradient-to-r from-red-500/30 to-orange-500/30 rounded-3xl border-2 border-red-500/50 max-w-4xl mx-auto backdrop-blur-sm">
               <div className="flex items-center justify-center mb-6">
                 <div className="w-6 h-6 bg-red-400 rounded-full mr-4 animate-ping"></div>
-                <span className="text-3xl lg:text-4xl font-black text-orange-300">⚠️ AVISO URGENTE ⚠️</span>
+                <span className="text-3xl lg:text-4xl font-black text-orange-300">⚠️ AVISO CRÍTICO ⚠️</span>
               </div>
               <p className="text-2xl lg:text-3xl font-bold text-white">
                 Seus concorrentes podem estar lendo isso AGORA. Cada segundo que você demora é uma 
-                <span className="font-black text-red-300"> VANTAGEM que você dá para eles</span>
+                <span className="font-black text-red-300"> VANTAGEM que você dá para eles</span>. 
+                <span className="font-black text-yellow-300"> Aja ANTES que seja tarde demais</span>
               </p>
             </div>
           </div>

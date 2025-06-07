@@ -123,11 +123,11 @@ const DynamicPageHero = ({ service, city, content }: DynamicPageHeroProps) => {
             <div className="bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-2xl p-6 border border-red-400/30 backdrop-blur-sm max-w-4xl mx-auto">
               <div className="flex items-center justify-center mb-3">
                 <div className="w-4 h-4 bg-red-400 rounded-full mr-3 animate-ping"></div>
-                <span className="text-2xl font-bold text-orange-300">⚡ OFERTA LIMITADA ⚡</span>
+                <span className="text-2xl font-bold text-orange-300">⚡ EXCLUSIVIDADE LIMITADA ⚡</span>
               </div>
               <p className="text-xl text-white">
-                Primeiros <span className="font-black text-yellow-300">10 clientes</span> de {city.name} ganham 
-                <span className="font-black text-green-300"> 40% DE DESCONTO</span>
+                Apenas <span className="font-black text-yellow-300">empresas sérias</span> que querem 
+                <span className="font-black text-green-300"> DOMINAR {city.name}</span> são aceitas em nosso programa VIP
               </p>
             </div>
           </div>

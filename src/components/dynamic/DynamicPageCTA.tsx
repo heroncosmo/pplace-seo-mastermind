@@ -134,11 +134,12 @@ const DynamicPageCTA = ({ service, city }: DynamicPageCTAProps) => {
           <div className="p-12 bg-gradient-to-r from-red-500/30 to-orange-500/30 rounded-3xl border-2 border-orange-500/50 max-w-5xl mx-auto backdrop-blur-sm">
             <div className="flex items-center justify-center mb-6">
               <div className="w-6 h-6 bg-red-400 rounded-full mr-4 animate-ping"></div>
-              <span className="text-3xl lg:text-4xl font-black text-orange-300">⏰ OFERTA LIMITADA! ⏰</span>
+              <span className="text-3xl lg:text-4xl font-black text-orange-300">🔥 MOMENTO CRÍTICO! 🔥</span>
             </div>
             <p className="text-2xl lg:text-3xl font-bold">
-              Primeiros <span className="font-black text-yellow-300">10 clientes</span> de {city.name} ganham 
-              <span className="font-black text-green-300"> 40% DE DESCONTO</span> + consultoria premium gratuita
+              Enquanto você hesita, <span className="font-black text-red-300">seus concorrentes</span> podem estar 
+              <span className="font-black text-yellow-300"> fechando negócio conosco</span>. 
+              <span className="font-black text-green-300"> Seja MAIS ESPERTO que eles</span>
             </p>
           </div>
         </div>

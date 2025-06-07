@@ -119,11 +119,11 @@ const Hero = () => {
             <div className="bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-2xl p-6 border border-red-400/30 backdrop-blur-sm max-w-4xl mx-auto">
               <div className="flex items-center justify-center mb-3">
                 <div className="w-4 h-4 bg-red-400 rounded-full mr-3 animate-ping"></div>
-                <span className="text-2xl font-bold text-orange-300">⚡ ÚLTIMAS VAGAS HOJE ⚡</span>
+                <span className="text-2xl font-bold text-orange-300">⚡ AÇÃO LIMITADA ⚡</span>
               </div>
               <p className="text-xl text-white">
-                Apenas <span className="font-black text-yellow-300">7 vagas restantes</span> para implementação em 
-                <span className="font-black text-green-300"> DEZEMBRO com 60% DE DESCONTO</span>
+                Enquanto você lê isso, <span className="font-black text-yellow-300">seus concorrentes podem estar</span> contratando uma solução inferior. 
+                <span className="font-black text-green-300"> Seja o primeiro a DOMINAR com nossa IA</span>
               </p>
             </div>
           </div>
