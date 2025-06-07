@@ -10,7 +10,7 @@ import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
 
-// Lazy load pages
+// Lazy load pages para melhor performance
 const CityMapPage = lazy(() => import("./pages/CityMap"));
 const CityPage = lazy(() => import("./pages/CityPage"));
 const ServiceCityPage = lazy(() => import("./pages/ServiceCityPage"));
@@ -19,6 +19,19 @@ const BlogPage = lazy(() => import("./pages/BlogPage"));
 const BlogPostPage = lazy(() => import("./pages/BlogPostPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
+// Loading component melhorado
+const LoadingPage = () => (
+  <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+    <div className="text-center">
+      <div className="relative">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-4 border-purple-600 mx-auto"></div>
+        <div className="absolute inset-0 rounded-full h-32 w-32 border-r-4 border-blue-400 animate-spin" style={{animationDirection: 'reverse', animationDuration: '1.5s'}}></div>
+      </div>
+      <p className="mt-6 text-xl text-gray-700 font-medium">Carregando...</p>
+    </div>
+  </div>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <HelmetProvider>
@@ -26,7 +39,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Carregando...</div>}>
+          <Suspense fallback={<LoadingPage />}>
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/mapa-cidades" element={<CityMapPage />} />
@@ -34,7 +47,7 @@ const App = () => (
               <Route path="/blog/:slug" element={<BlogPostPage />} />
               
               {/* Rota específica para criação de sites por cidade */}
-              <Route path="/criacao-de-site-:city" element={<CityPage />} />
+              <Route path="/criacao-de-site-:city" element={<DynamicServiceCityPage />} />
               
               {/* Rotas para todos os serviços por cidade - formato: /servico-cidade */}
               <Route path="/ecommerce-:city" element={<DynamicServiceCityPage />} />

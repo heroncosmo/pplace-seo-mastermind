@@ -32,7 +32,8 @@ const DynamicServiceCityPage = () => {
     'marketplace': { name: 'Marketplace', price: 15999, description: 'Plataformas de vendas online' },
     'consultoria-ti': { name: 'Consultoria em TI', price: 2999, description: 'Consultoria especializada em tecnologia' },
     'integracao-sistemas': { name: 'Integração de Sistemas', price: 5999, description: 'Conecte todos os seus sistemas' },
-    'seguranca-digital': { name: 'Segurança Digital', price: 3499, description: 'Proteção completa para seu negócio digital' }
+    'seguranca-digital': { name: 'Segurança Digital', price: 3499, description: 'Proteção completa para seu negócio digital' },
+    'criacao-de-site': { name: 'Criação de Sites', price: 1999, description: 'Sites profissionais e modernos' }
   };
 
   useEffect(() => {
@@ -41,13 +42,12 @@ const DynamicServiceCityPage = () => {
 
   const loadPageData = async () => {
     try {
-      console.log('=== NOVA LÓGICA CORRIGIDA ===');
+      console.log('🔍 ANÁLISE DE ROTA INICIADA');
       console.log('URL completa:', location.pathname);
-      console.log('Params do React Router:', params);
+      console.log('Params:', params);
       
-      // Extrair cidade do parâmetro do React Router
       const citySlug = params.city;
-      console.log('City slug do parâmetro:', citySlug);
+      console.log('Slug da cidade:', citySlug);
       
       if (!citySlug) {
         console.error('❌ Parâmetro city não encontrado');
@@ -55,21 +55,18 @@ const DynamicServiceCityPage = () => {
         return;
       }
 
-      // Extrair serviço da URL - método SIMPLIFICADO
+      // Extrair serviço da URL
       const pathname = location.pathname;
-      console.log('Pathname:', pathname);
+      const segments = pathname.split('/').filter(Boolean);
       
-      // Formato esperado: /servico-cidade
-      // Exemplo: /ecommerce-sao-jose -> serviço = "ecommerce"
-      const segments = pathname.split('/').filter(Boolean); // Remove vazios
       if (segments.length === 0) {
-        console.error('❌ URL inválida');
+        console.error('❌ URL inválida - sem segmentos');
         setLoading(false);
         return;
       }
       
-      const fullSlug = segments[0]; // Pega o primeiro segmento
-      console.log('Slug completo:', fullSlug);
+      const fullSlug = segments[0];
+      console.log('Slug completo extraído:', fullSlug);
       
       // Extrair serviço removendo a cidade do final
       const serviceSlug = fullSlug.replace(`-${citySlug}`, '');
@@ -88,7 +85,7 @@ const DynamicServiceCityPage = () => {
       // Converter slug da cidade para nome legível
       const cityName = slugToCity(citySlug);
       
-      console.log('✅ SUCESSO!');
+      console.log('✅ DADOS PROCESSADOS COM SUCESSO:');
       console.log('- Serviço:', serviceData.name);
       console.log('- Cidade:', cityName);
 
@@ -183,13 +180,19 @@ const DynamicServiceCityPage = () => {
           <div className="max-w-2xl mx-auto">
             <div className="text-8xl mb-6">🚫</div>
             <h1 className="text-5xl font-bold text-gray-900 mb-6">Página não encontrada</h1>
-            <p className="text-xl text-gray-600 mb-6">O serviço ou cidade solicitada não foi encontrada.</p>
+            <p className="text-xl text-gray-600 mb-8">O serviço ou cidade solicitada não foi encontrada.</p>
             <div className="bg-white/80 backdrop-blur-sm rounded-lg p-6 text-left space-y-2 text-sm">
               <p><strong>URL:</strong> {location.pathname}</p>
               <p><strong>Params:</strong> {JSON.stringify(params)}</p>
               <p><strong>Serviços disponíveis:</strong> {Object.keys(serviceMap).join(', ')}</p>
               <p className="text-orange-600">⚠️ Verifique o console do navegador para logs detalhados</p>
             </div>
+            <button 
+              onClick={() => window.location.href = '/'}
+              className="mt-8 bg-purple-600 text-white px-8 py-4 rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Voltar ao Início
+            </button>
           </div>
         </div>
         <Footer />

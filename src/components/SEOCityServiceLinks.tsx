@@ -1,12 +1,11 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useCities, useServices } from '@/hooks/useContentGeneration';
+import { useCities } from '@/hooks/useContentGeneration';
 import { cityToSlug } from '@/utils/cityUtils';
 
 const SEOCityServiceLinks = () => {
   const { data: cities } = useCities();
-  const { data: services } = useServices();
 
   const serviceRoutes = [
     { name: 'E-commerce', slug: 'ecommerce' },
@@ -31,8 +30,7 @@ const SEOCityServiceLinks = () => {
     return null;
   }
 
-  // Log de debug melhorado
-  console.log('=== SEO LINKS DEBUG (CORRIGIDO) ===');
+  console.log('=== SEO LINKS DEBUG (FUNCIONANDO) ===');
   console.log('✅ Cidades carregadas:', cities.length);
   console.log('✅ Primeira cidade exemplo:', cities[0]);
   console.log('✅ Serviços configurados:', serviceRoutes.length);
@@ -65,8 +63,7 @@ const SEOCityServiceLinks = () => {
                 const citySlug = cityToSlug(city.name);
                 const mainCityLink = `/criacao-de-site-${citySlug}`;
                 
-                // Debug melhorado
-                console.log(`🔗 TESTANDO LINKS PARA ${city.name}:`);
+                console.log(`🔗 GERANDO LINKS PARA ${city.name}:`);
                 console.log(`   └─ Link principal: ${mainCityLink}`);
                 
                 return (
@@ -76,7 +73,7 @@ const SEOCityServiceLinks = () => {
                       {/* Link principal da cidade */}
                       <Link 
                         to={mainCityLink}
-                        className="text-blue-600 hover:text-blue-800 hover:underline"
+                        className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
                         onClick={() => console.log(`🖱️ Clicou em: ${mainCityLink}`)}
                       >
                         Sites em {city.name}
@@ -86,14 +83,13 @@ const SEOCityServiceLinks = () => {
                       {serviceRoutes.slice(0, 7).map((service) => {
                         const serviceLink = `/${service.slug}-${citySlug}`;
                         
-                        // Debug para cada link de serviço
                         console.log(`   └─ ${service.name}: ${serviceLink}`);
                         
                         return (
                           <Link 
                             key={service.slug}
                             to={serviceLink}
-                            className="text-gray-600 hover:text-purple-600 hover:underline"
+                            className="text-gray-600 hover:text-purple-600 hover:underline transition-colors"
                             onClick={() => console.log(`🖱️ Clicou em serviço: ${serviceLink} (${service.name} em ${city.name})`)}
                           >
                             {service.name}
@@ -133,7 +129,7 @@ const SEOCityServiceLinks = () => {
                       <Link 
                         key={`${service.slug}-${city.id}`}
                         to={serviceLink}
-                        className="block text-gray-500 hover:text-purple-600 hover:underline"
+                        className="block text-gray-500 hover:text-purple-600 hover:underline transition-colors"
                         onClick={() => console.log(`🖱️ Clicou em link completo: ${serviceLink}`)}
                       >
                         {service.name}
