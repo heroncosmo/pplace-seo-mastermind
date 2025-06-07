@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useCities, useServices } from '@/hooks/useContentGeneration';
@@ -231,8 +230,8 @@ const DynamicServiceCityPage = () => {
       />
       
       <Header />
-      <DynamicPageHero service={service} city={city} />
-      <DynamicPageContent service={service} city={city} />
+      <DynamicPageHero service={service} city={city} content={undefined} />
+      <DynamicPageContent service={service} city={city} content={undefined} />
       <DynamicPageServices service={service} city={city} />
       <DynamicPageCTA service={service} city={city} />
       <Footer />

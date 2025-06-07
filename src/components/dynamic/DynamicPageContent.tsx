@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 interface DynamicPageContentProps {
   service: any;
   city: any;
-  content: any;
+  content?: any;
 }
 
 const DynamicPageContent = ({ service, city, content }: DynamicPageContentProps) => {
