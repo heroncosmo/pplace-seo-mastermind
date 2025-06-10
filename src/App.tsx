@@ -58,20 +58,30 @@ const App = () => (
               
               {/* Rotas de serviços individuais */}
               <Route path="/servicos/aplicativos" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/aplicativo" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/seo" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/ecommerce" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/landing-pages" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/landing-page" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/leadpilot" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/sites" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/sites-institucionais" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/sistemas-ia" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/sistema-ia" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/automacao" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/automacao-rpa" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/chatbots" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/chatbots-ia" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/business-intelligence" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/marketing-digital" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/marketplace" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/consultoria" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/consultoria-ti" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/integracao" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/integracao-sistemas" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/seguranca" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/seguranca-digital" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/criacao-de-site" element={<DynamicServiceCityPage />} />
               
               {/* Rota específica para criação de sites por cidade */}
               <Route path="/criacao-de-site-:city" element={<DynamicServiceCityPage />} />
@@ -79,19 +89,31 @@ const App = () => (
               {/* Rotas para todos os serviços por cidade - formato: /servico-cidade */}
               <Route path="/ecommerce-:city" element={<DynamicServiceCityPage />} />
               <Route path="/landing-page-:city" element={<DynamicServiceCityPage />} />
+              <Route path="/landing-pages-:city" element={<DynamicServiceCityPage />} />
               <Route path="/leadpilot-:city" element={<DynamicServiceCityPage />} />
               <Route path="/seo-:city" element={<DynamicServiceCityPage />} />
               <Route path="/aplicativo-:city" element={<DynamicServiceCityPage />} />
+              <Route path="/aplicativos-:city" element={<DynamicServiceCityPage />} />
               <Route path="/sistema-ia-:city" element={<DynamicServiceCityPage />} />
+              <Route path="/sistemas-ia-:city" element={<DynamicServiceCityPage />} />
+              <Route path="/sites-:city" element={<DynamicServiceCityPage />} />
               <Route path="/sites-institucionais-:city" element={<DynamicServiceCityPage />} />
+              <Route path="/automacao-:city" element={<DynamicServiceCityPage />} />
               <Route path="/automacao-rpa-:city" element={<DynamicServiceCityPage />} />
+              <Route path="/chatbots-:city" element={<DynamicServiceCityPage />} />
               <Route path="/chatbots-ia-:city" element={<DynamicServiceCityPage />} />
               <Route path="/business-intelligence-:city" element={<DynamicServiceCityPage />} />
               <Route path="/marketing-digital-:city" element={<DynamicServiceCityPage />} />
               <Route path="/marketplace-:city" element={<DynamicServiceCityPage />} />
+              <Route path="/consultoria-:city" element={<DynamicServiceCityPage />} />
               <Route path="/consultoria-ti-:city" element={<DynamicServiceCityPage />} />
+              <Route path="/integracao-:city" element={<DynamicServiceCityPage />} />
               <Route path="/integracao-sistemas-:city" element={<DynamicServiceCityPage />} />
+              <Route path="/seguranca-:city" element={<DynamicServiceCityPage />} />
               <Route path="/seguranca-digital-:city" element={<DynamicServiceCityPage />} />
+              
+              {/* Catch-all para outras combinações de serviços com cidades */}
+              <Route path="/*" element={<DynamicServiceCityPage />} />
               
               {/* Página 404 */}
               <Route path="*" element={<NotFound />} />
