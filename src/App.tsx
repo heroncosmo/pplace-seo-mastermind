@@ -83,37 +83,8 @@ const App = () => (
               <Route path="/servicos/seguranca-digital" element={<DynamicServiceCityPage />} />
               <Route path="/servicos/criacao-de-site" element={<DynamicServiceCityPage />} />
               
-              {/* Rota específica para criação de sites por cidade */}
-              <Route path="/criacao-de-site-:city" element={<DynamicServiceCityPage />} />
-              
-              {/* Rotas para todos os serviços por cidade - formato: /servico-cidade */}
-              <Route path="/ecommerce-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/landing-page-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/landing-pages-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/leadpilot-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/seo-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/aplicativo-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/aplicativos-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/sistema-ia-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/sistemas-ia-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/sites-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/sites-institucionais-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/automacao-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/automacao-rpa-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/chatbots-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/chatbots-ia-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/business-intelligence-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/marketing-digital-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/marketplace-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/consultoria-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/consultoria-ti-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/integracao-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/integracao-sistemas-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/seguranca-:city" element={<DynamicServiceCityPage />} />
-              <Route path="/seguranca-digital-:city" element={<DynamicServiceCityPage />} />
-              
-              {/* Catch-all para outras combinações de serviços com cidades */}
-              <Route path="/*" element={<DynamicServiceCityPage />} />
+              {/* Rota específica para capturar URLs com parâmetros dinâmicos */}
+              <Route path="/:dynamicPath" element={<DynamicServiceCityPage />} />
               
               {/* Página 404 */}
               <Route path="*" element={<NotFound />} />
