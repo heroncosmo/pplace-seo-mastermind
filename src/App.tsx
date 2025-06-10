@@ -56,6 +56,23 @@ const App = () => (
               <Route path="/portfolio" element={<PortfolioPage />} />
               <Route path="/sobre" element={<AboutPage />} />
               
+              {/* Rotas de serviços individuais */}
+              <Route path="/servicos/aplicativos" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/seo" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/ecommerce" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/landing-pages" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/leadpilot" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/sites" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/sistemas-ia" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/automacao" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/chatbots" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/business-intelligence" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/marketing-digital" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/marketplace" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/consultoria" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/integracao" element={<DynamicServiceCityPage />} />
+              <Route path="/servicos/seguranca" element={<DynamicServiceCityPage />} />
+              
               {/* Rota específica para criação de sites por cidade */}
               <Route path="/criacao-de-site-:city" element={<DynamicServiceCityPage />} />
               
