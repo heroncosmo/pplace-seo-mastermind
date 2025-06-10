@@ -239,14 +239,21 @@ const DynamicServiceCityPage = () => {
           if (routeParam.startsWith(possibleService + '-')) {
             serviceSlug = possibleService;
             citySlug = routeParam.substring(possibleService.length + 1);
+            console.log('✅ Match encontrado:', possibleService, 'Cidade:', citySlug);
             break;
           }
         }
         
-        // Fallback: assumir que o primeiro elemento é o serviço
+        // Fallback: assumir que os primeiros elementos são o serviço
         if (!serviceSlug && parts.length >= 2) {
-          serviceSlug = parts[0];
-          citySlug = parts.slice(1).join('-');
+          // Para casos como sistema-ia-blumenau, tentar sistema-ia primeiro
+          if (parts[0] === 'sistema' && parts[1] === 'ia') {
+            serviceSlug = 'sistema-ia';
+            citySlug = parts.slice(2).join('-');
+          } else {
+            serviceSlug = parts[0];
+            citySlug = parts.slice(1).join('-');
+          }
         }
       }
     }
